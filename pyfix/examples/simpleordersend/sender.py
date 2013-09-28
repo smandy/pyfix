@@ -1,10 +1,11 @@
 import yaml
 from twisted.internet import reactor
 
-from pyfix.FIXProtocol import SessionManager, NormalMessageProcessing, LoggedOut
+from pyfix.FIXProtocol import NormalMessageProcessing, LoggedOut
 from pyfix.FIXSpec import parse_specification
 from pyfix.FIXConfig import makeConfig
 from pyfix.FIXApplication import FIXApplication
+from pyfix.SessionFactory import SessionManager
 
 fix = parse_specification("FIX.4.2")
 

@@ -1,8 +1,10 @@
 import yaml
 
-from pyfix.FIXProtocol import SessionManager, NormalMessageProcessing
+from pyfix.FIXProtocol import NormalMessageProcessing
 from pyfix.FIXSpec import parse_specification
 from pyfix.FIXConfig import makeConfig
+from pyfix.SessionFactory import SessionManager
+
 
 def boop(*args):
     print "Boop"
