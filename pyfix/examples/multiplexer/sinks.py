@@ -1,14 +1,14 @@
 import yaml
 
 from pyfix.FIXProtocol import SessionManager, NormalMessageProcessing
-from pyfix.FIXSpec import parseSpecification
+from pyfix.FIXSpec import parse_specification
 from pyfix.FIXConfig import makeConfig
 from pyfix.util.randomOrders import flipOrder
 from pyfix.FIXApplication import FIXApplication
 from pyfix.FIXPerspective import FIXPerspective
 from twisted.internet import reactor
 
-fix = parseSpecification(version="FIX.4.2")
+fix = parse_specification(version="FIX.4.2")
 
 
 class Receiver(FIXApplication):
@@ -24,7 +24,7 @@ class Receiver(FIXApplication):
             reply = flipOrder(self.fix, order)
             assert self.protocol is not None
             assert self.session is not None
-            strMsg = self.session.compileMessage(reply)
+            strMsg = self.session.compile_message(reply)
             print ">>>MYEXEC %s %s" % (reply, strMsg)
             protocol.transport.write(strMsg)
 

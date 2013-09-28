@@ -4,8 +4,8 @@ from BerkeleyPersister import BerkeleyPersister
 from datetime import datetime
 import time
 
-from FIXSpec import  parseSpecification
-fixSpec    = parseSpecification( version= "FIX.4.2" )
+from FIXSpec import  parse_specification
+fixSpec    = parse_specification( version= "FIX.4.2" )
 
 fr = "/Users/andy/persist/send"
 bp = BerkeleyPersister(fr, dt = datetime( 2009, 1, 13) )

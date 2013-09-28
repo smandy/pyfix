@@ -19,16 +19,16 @@ orderID = 0
 def flipOrder( f, order):
     global orderID
     px = random.normalvariate( 100, 20)
-    orderQty = order.getFieldValue( f.OrderQty )
+    orderQty = order.get_field_value( f.OrderQty )
     reply = f.ExecutionReport( fields = [
         f.OrderID('ORDER-%s' % orderID),
-        order.getField( f.ClOrdID),
+        order.get_field( f.ClOrdID),
         f.ExecID('EXEC-%s' % orderID),
         f.ExecTransType.NEW,
         f.ExecType.NEW,
         f.OrdStatus.FILLED,
-        order.getField( f.Symbol ),
-        order.getField( f.Side ),
+        order.get_field( f.Symbol ),
+        order.get_field( f.Side ),
         f.LeavesQty(0),
         f.CumQty(orderQty),
         f.LastShares( orderQty),

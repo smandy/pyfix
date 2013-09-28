@@ -3,7 +3,7 @@
 import yaml
 
 from pyfix.FIXProtocol   import SessionManager, NormalMessageProcessing
-from pyfix.FIXSpec       import parseSpecification
+from pyfix.FIXSpec       import parse_specification
 from pyfix.FIXConfig import makeConfig
 
 def boop(*args):
@@ -11,7 +11,7 @@ def boop(*args):
 
 from pyfix.FIXApplication import FIXApplication
 
-fix = parseSpecification( version= "FIX.4.2" )
+fix = parse_specification( version= "FIX.4.2" )
 
 class Receiver(FIXApplication):
     def __init__(self, fix):
@@ -25,15 +25,15 @@ class Receiver(FIXApplication):
         #msg.dump()
         f = self.fix
         if self.state.__class__==NormalMessageProcessing:
-            orderQty = msg.getFieldValue( f.OrderQty )
+            orderQty = msg.get_field_value( f.OrderQty )
             reply = f.ExecutionReport( fields = [
                 f.OrderID('ORDERID'),
                 f.ExecID('Exec21'),
                 f.ExecTransType.NEW,
                 f.ExecType.NEW,
                 f.OrdStatus.FILLED,
-                msg.getField( f.Symbol ),
-                msg.getField( f.Side ),
+                msg.get_field( f.Symbol ),
+                msg.get_field( f.Side ),
                 f.LeavesQty(0),
                 f.CumQty(orderQty),
                 f.LastShares( orderQty),
@@ -42,11 +42,11 @@ class Receiver(FIXApplication):
             
             assert self.protocol is not None
             assert self.session is not None
-            strMsg = self.session.compileMessage(reply)
+            strMsg = self.session.compile_message(reply)
             print ">>>MYEXEC %s %s" % (reply, strMsg)
             self.protocol.transport.write( strMsg )
         else:
-            dup = msg.getHeaderFieldValue( f.PossDupFlag , default = False)
+            dup = msg.get_header_field_value( f.PossDupFlag , default = False)
 
 config = yaml.load( open('../config/receiver.yaml','r') )
 

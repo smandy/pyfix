@@ -1,7 +1,7 @@
 
 from FIXProtocol       import AcceptorSession, FIXProtocol
 from BerkeleyPersister import BerkeleyPersister
-from FIXSpec import parseSpecification
+from FIXSpec import parse_specification
 
 class FlippingProtocol(FIXProtocol):
     def __init__(self, *args, **kwargs):
@@ -21,34 +21,34 @@ class FlippingProtocol(FIXProtocol):
         #msg.dump()
         f = self.fix
         if self.state == self.normalMessageProcessing:
-            orderQty = msg.getFieldValue( f.OrderQty )
+            orderQty = msg.get_field_value( f.OrderQty )
             reply = f.ExecutionReport( fields = [
                 f.OrderID('ORDERID'),
                 f.ExecID('Exec21'),
                 f.ExecTransType.NEW,
                 f.ExecType.NEW,
                 f.OrdStatus.FILLED,
-                msg.getField( f.Symbol ),
-                msg.getField( f.Side ),
+                msg.get_field( f.Symbol ),
+                msg.get_field( f.Side ),
                 f.LeavesQty(0),
                 f.CumQty(orderQty),
                 f.LastShares( orderQty),
                 f.LastPx( 101.5),
                 f.AvgPx(101.5) ] )
             
-            strMsg = self.factory.compileMessage(reply)
+            strMsg = self.factory.compile_message(reply)
             print ">>>MYEXEC %s %s" % (reply, strMsg)
             self.transport.write( strMsg )
         else:
-            dup = msg.getHeaderFieldValue( f.PossDupFlag , default = False)
+            dup = msg.get_header_field_value( f.PossDupFlag , default = False)
 
 if __name__=='__main__' and 1:
     receiveRoot = "/Users/andy/persist/receive"
-    fixSpec    = parseSpecification( version= "FIX.4.2" )
+    fixSpec    = parse_specification( version= "FIX.4.2" )
     acceptor      = AcceptorSession( fixSpec ,"PHROMS", "SENDER")
     acceptor.protocol = FlippingProtocol
     acceptPersister = BerkeleyPersister( receiveRoot )
-    acceptor.setPersister( acceptPersister )
+    acceptor.set_persister( acceptPersister )
     
     if 1:        
         from twisted.internet import reactor

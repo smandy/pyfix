@@ -44,7 +44,7 @@ class LinksPage(resource.Resource):
             else:
                 strState = "N/A"
             
-            retLines.append( self.wrapHeader( [ session.strConnected(),
+            retLines.append( self.wrapHeader( [ session.str_connected(),
                                           sender, target,
                                           session.inMsgSeqNum,
                                           session.outMsgSeqNum, strState ] , "TD" ) )

@@ -2,7 +2,7 @@
 import unittest
 
 
-from pyfix.FIXSpec import parseSpecification
+from pyfix.FIXSpec import parse_specification
 from pyfix.FIXParser import SynchronousParser
 from pyfix.FIXProtocol import Session
 import os
@@ -40,7 +40,7 @@ class SpecTester(unittest.TestCase):
         self.testMethod = testMethod
 
     def setUp( self):
-        self.fix = parseSpecification( self.version )
+        self.fix = parse_specification( self.version )
         self.fp = SynchronousParser(self.fix)
         
         self.sendConfig = SessionConfig( 'initiator',
@@ -93,9 +93,9 @@ class SpecTester(unittest.TestCase):
 ##                                              self.pyfix.LeavesQty( 200),
 ##                                              self.pyfix.ClOrdID( "ORDER_2232") ] )
         msg = self.fix.ExecutionReport( fields = fields )
-        asFix = self.ds.compileMessage(msg)
+        asFix = self.ds.compile_message(msg)
         msg2, _ ,_ = self.fp.feed(asFix)
-        self.assertEqual( msg2.toFix(), asFix)
+        self.assertEqual( msg2.to_fix(), asFix)
 
 def test_suite():
     print "Suite Called!"

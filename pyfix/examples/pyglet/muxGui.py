@@ -21,9 +21,9 @@ HTMLLabel = pyglet.text.HTMLLabel
 
 labels = None
 
-from pyfix.FIXSpec import parseSpecification
+from pyfix.FIXSpec import parse_specification
 
-fix = parseSpecification("FIX.4.2")
+fix = parse_specification("FIX.4.2")
 from pyfix.FIXParser import SynchronousParser
 
 sp = SynchronousParser(fix)
@@ -74,14 +74,14 @@ def draw_session_display():
     tmplate = '<p><font color="red">%s</p></font>'
     if mg.strOrder is not lastOrder:
         tmp, _, _ = sp.parse(mg.strOrder)
-        orderObject = "\n".join(tmp.getDump())
+        orderObject = "\n".join(tmp.get_dump())
         #orderObject = r"".join( [ tmplate % x for x in tmp.getDump() ] )
         #orderObject = r"<br>".join( tmp.getDump() )
         lastOrder = mg.strOrder
 
     if mg.strExec is not lastExecution:
         tmp, _, _, = sp.parse(mg.strExec)
-        executionObject = "\n".join(tmp.getDump())
+        executionObject = "\n".join(tmp.get_dump())
         lastExecution = mg.strExec
     try:
         if not labels or len(labels) != len(mg.ss):

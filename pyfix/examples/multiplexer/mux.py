@@ -3,14 +3,14 @@ import yaml
 from twisted.internet import reactor
 
 from pyfix.FIXProtocol import SessionManager
-from pyfix.FIXSpec import parseSpecification
+from pyfix.FIXSpec import parse_specification
 from pyfix.FIXConfig import makeConfig
 from pyfix.FIXApplication import FIXApplication
 from pyfix.FIXPerspective import FIXPerspective
 
 from pyfix.util.randomOrders import extensions
 
-fix = parseSpecification("FIX.4.2")
+fix = parse_specification("FIX.4.2")
 
 
 class Multiplexer(object):
@@ -26,19 +26,19 @@ class Multiplexer(object):
             # Does it even need to know?! - do these guys even need to have their own identify ?
             # could use only one of each?
             sink_connection = SinkConnection(self)
-            session.setApp(sink_connection)
+            session.set_app(sink_connection)
             self.sink_for_extension[extension] = sink_connection
 
         for (s_t, session) in session_manager.acceptorsByTuple.items():
             sender, target = s_t
             app = SourceConnection(self)
-            session.setApp(app)
+            session.set_app(app)
             self.source_by_name[target] = app
         print "source by name ", self.source_by_name
 
     def on_order(self, source_connection, order):
         assert order.__class__ == fix.OrderSingle
-        symbol = order.getFieldValue(fix.Symbol)
+        symbol = order.get_field_value(fix.Symbol)
         extension = symbol.split('.')[-1]
         assert self.sink_for_extension.has_key(extension)
         sink = self.sink_for_extension[extension]
@@ -48,7 +48,7 @@ class Multiplexer(object):
         # from the original order.
         if sink.protocol:
             re_wrap = fix.OrderSingle(fields=order.fields)
-            msg = sink.session.compileMessage(re_wrap)
+            msg = sink.session.compile_message(re_wrap)
             sink.protocol.transport.write(msg)
         else:
             print "Can't route order - sink not connected"
@@ -57,14 +57,14 @@ class Multiplexer(object):
         assert execution.__class__ == fix.ExecutionReport
         #execution.dump()
 
-        ClOrdID = execution.getFieldValue(fix.ClOrdID)
+        ClOrdID = execution.get_field_value(fix.ClOrdID)
         source_system = ClOrdID[:7]
         source = self.source_by_name.get(source_system, None)
         if not source:
             print "Couldn't get source %s %s" % (source_system, self.source_by_name)
         else:
             reWrap = fix.ExecutionReport(fields=execution.fields)
-            strMsg = source.session.compileMessage(reWrap)
+            strMsg = source.session.compile_message(reWrap)
             source.protocol.transport.write(strMsg)
 
 
@@ -91,7 +91,7 @@ class SourceConnection(FIXApplication):
         self.mux = mux
         self.dispatchDict = {fix.OrderSingle: self.onOrder,
                              fix.Heartbeat: self.noop}
-        self.recoveryDict = {fix.ExecutionReport: self.onRecoveredExecution,
+        self.recovery_dict = {fix.ExecutionReport: self.onRecoveredExecution,
                              fix.OrderSingle: self.onRecoveredOrder,
                              fix.ResendRequest: self.noop,
                              fix.Heartbeat: self.noop,
@@ -108,7 +108,7 @@ class SourceConnection(FIXApplication):
     def onRecoveredOrder(self, msg):
         self.orders += 1
 
-    def onRecoveryDone(self):
+    def on_recovery_done(self):
         print "%s recovered %s orders, %s executions" % (self.session.target, self.orders, self.execs )
 
 
@@ -118,7 +118,7 @@ class SinkConnection(FIXApplication):
         self.dispatchDict = {fix.ExecutionReport: self.onExecution,
                              fix.Heartbeat: self.noop}
 
-        self.recoveryDict = {fix.ExecutionReport: self.onRecoveredExecution,
+        self.recovery_dict = {fix.ExecutionReport: self.onRecoveredExecution,
                              fix.Heartbeat: self.noop,
                              fix.OrderSingle: self.onRecoveredOrder,
                              fix.ResendRequest: self.noop,
@@ -127,7 +127,7 @@ class SinkConnection(FIXApplication):
         self.execs = 0
         self.orders = 0
 
-    def onRecoveryDone(self):
+    def on_recovery_done(self):
         "%s recovered %s executions, %s orders" % (self.session.target, self.execs, self.orders)
 
     def onRecoveredExecution(self, msg):

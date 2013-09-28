@@ -41,14 +41,14 @@ class DummySession:
         msg.footerFields = footer
 
         # this will check what we've done so far
-        msg.checkStructure()
+        msg.check_structure()
         msg.validate()
 
-        bl = msg.calcBodyLength( mutate = True)
-        cs = msg.calcCheckSum( mutate = True )
-        msg.checkBodyLength()
-        bl2 = msg.calcBodyLength( )
-        cs2 = msg.calcCheckSum()
+        bl = msg.calc_body_length( mutate = True)
+        cs = msg.calc_check_sum( mutate = True )
+        msg.check_body_length()
+        bl2 = msg.calc_body_length( )
+        cs2 = msg.calc_check_sum()
         print bl, bl2, cs, cs2
         self.msgSeqNum += 1
 
@@ -95,14 +95,14 @@ class Session(ClientFactory):
         msg.footerFields = footer
 
         # this will check what we've done so far
-        msg.checkStructure()
+        msg.check_structure()
         msg.validate()
 
-        bl = msg.calcBodyLength( mutate = True)
-        cs = msg.calcCheckSum( mutate = True )
-        msg.checkBodyLength()
-        bl2 = msg.calcBodyLength( )
-        cs2 = msg.calcCheckSum()
+        bl = msg.calc_body_length( mutate = True)
+        cs = msg.calc_check_sum( mutate = True )
+        msg.check_body_length()
+        bl2 = msg.calc_body_length( )
+        cs2 = msg.calc_check_sum()
         print bl, bl2, cs, cs2
         self.msgSeqNum += 1
 

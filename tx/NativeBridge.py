@@ -47,10 +47,10 @@ class NativeConverter(object):
 
     def convertForeignOrderToLocal( self, msg, defaultAccount = None):
         f = self.fixSpec
-        clOrdID     = msg.getFieldValue( f.ClOrdID)
-        strSecurity = msg.getFieldValue( f.Symbol)
-        orderQty    = msg.getFieldValue( f.OrderQty)
-        side = Side.byFixID[int( msg.getField( f.Side ) )]
+        clOrdID     = msg.get_field_value( f.ClOrdID)
+        strSecurity = msg.get_field_value( f.Symbol)
+        orderQty    = msg.get_field_value( f.OrderQty)
+        side = Side.byFixID[int( msg.get_field( f.Side ) )]
         if self.sm:
             sec = self.sm.lookupByFields( ['ticker','ric'], strSecurity)
             if not sec:
@@ -59,25 +59,25 @@ class NativeConverter(object):
                 sec = Security()
                 sec.ticker = strSecurity
     
-        strAccount = msg.getFieldValue( f.Account)
+        strAccount = msg.get_field_value( f.Account)
         if strAccount is not None and strAccount!='':
             account  = self.accountManager.getByName( strAccount )
         else:
             assert defaultAccount is not None, "Can't resolve account : none specified and no default"
             # responsibility of pyfix engine to tag session-specific default to this account
             account = defaultAccount
-        px = msg.getFieldValue( f.Price )
+        px = msg.get_field_value( f.Price )
         return Order( clOrdID, sec, orderQty, side, account, px)
 
     def convertForeignExecutionToLocal(self, msg):
         f = self.fixSpec
-        execType = ExecType.byFixID[ int( msg.getFieldValue( f.ExecType ) ) ]
-        execID   = msg.getFieldValue( f.ExecID )
-        clOrdID  = msg.getFieldValue( f.ClOrdID )
-        side     = Side.Side.byFixID[ int( msg.getFieldValue( f.Side ) ) ]
-        lastShares = msg.getFieldValue( f.LastShares)
-        lastPx     = msg.getFieldValue( f.LastPx )
-        security = self.sm.getByFields( [ 'ticker','ric' ], msg.getFieldValue( f.Symbol ) )
+        execType = ExecType.byFixID[ int( msg.get_field_value( f.ExecType ) ) ]
+        execID   = msg.get_field_value( f.ExecID )
+        clOrdID  = msg.get_field_value( f.ClOrdID )
+        side     = Side.Side.byFixID[ int( msg.get_field_value( f.Side ) ) ]
+        lastShares = msg.get_field_value( f.LastShares)
+        lastPx     = msg.get_field_value( f.LastPx )
+        security = self.sm.getByFields( [ 'ticker','ric' ], msg.get_field_value( f.Symbol ) )
         return Execution( execType, execID, clOrdID, side, lastShares, security, lastPx)
         
 class NativeBridge(object):
@@ -128,15 +128,15 @@ class NativeBridge(object):
 
     def sendOrder(self, localOrder, sessionInfo ):
         foreignOrder = self.fixConverter.convertLocalOrderToForeign( localOrder, sessionInfo )
-        strMsg = self.factory.compileMessage( foreignOrder )
-        msgSeqNum = localOrder.getHeaderFieldValue( self.fix.MsgSeqNum)
+        strMsg = self.factory.compile_message( foreignOrder )
+        msgSeqNum = localOrder.get_header_field_value( self.fix.MsgSeqNum)
         print "NB>> %s %s %s" % (msgSeqNum, foreignOrder, strMsg)
         self.transport.write( strMsg )
         
     def sendExecution(self, orderState, execution):
         assert execution.__class__==Execution
         foreignEx = self.fixConverter.convertLocalExecutionToForeign( orderState, execution )
-        strMsg = self.factory.compileMessage( foreignEx )
+        strMsg = self.factory.compile_message( foreignEx )
         #msgSeqNum = localOrder.getHeaderFieldValue( self.pyfix.MsgSeqNum)
         print "NB>> %s %s" % (foreignEx, strMsg)
         self.session.send( foreignEx )

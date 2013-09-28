@@ -4,14 +4,14 @@ import os, shutil
 
 from twisted.internet import reactor
 from pyfix.FIXProtocol import SessionManager
-from pyfix.FIXSpec     import parseSpecification
+from pyfix.FIXSpec     import parse_specification
 from pyfix.FIXConfig import SessionConfig
 from pyfix.FIXProtocol import InitiatorAwaitingLogon, AcceptorAwaitingLogon, \
      NormalMessageProcessing, AwaitingLogout, LoggedOut, GapProcessing
 from pyfix.FIXApplication import FIXApplication
 from pyfix.util.randomOrders import makeOrder
 
-fix = parseSpecification( version= "FIX.4.2" )
+fix = parse_specification( version= "FIX.4.2" )
 
 from twisted.internet.defer import Deferred
 from twisted.trial.unittest import TestCase
@@ -35,7 +35,7 @@ class SessionTester( TestCase ):
 
     def _makeOrder(self):
         msg =  makeOrder(fix)
-        strMsg = self.initiatorSession.compileMessage(msg, disableValidation = True )
+        strMsg = self.initiatorSession.compile_message(msg, disableValidation = True )
         return msg, strMsg
 
     def setUp(self):
@@ -176,7 +176,7 @@ class AcceptorGap(LoginLogoutTester):
                                        ( NormalMessageProcessing, AwaitingLogout ),
                                        ( AwaitingLogout, LoggedOut ) ]
         myOrder = makeOrder(fix)
-        self.acceptorSession.compileMessage( myOrder )
+        self.acceptorSession.compile_message( myOrder )
 
     def initiatorStateChange(self, oldState, newState):
         SessionTester.initiatorStateChange( self, oldState, newState)
@@ -207,7 +207,7 @@ class InitiatorGap(LoginLogoutTester):
                                       ( NormalMessageProcessing, LoggedOut) ]
 
         myOrder = makeOrder(fix)
-        self.initiatorSession.compileMessage( myOrder )
+        self.initiatorSession.compile_message( myOrder )
 
 
 def test_suite():

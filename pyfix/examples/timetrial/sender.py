@@ -6,7 +6,7 @@ import yaml
 from twisted.internet import reactor
 
 from pyfix.FIXProtocol import SessionManager, NormalMessageProcessing
-from pyfix.FIXSpec import parseSpecification
+from pyfix.FIXSpec import parse_specification
 from pyfix.FIXConfig import makeConfig
 from pyfix.FIXApplication import FIXApplication
 import time, cPickle
@@ -14,7 +14,7 @@ from pprint import pprint as pp
 import traceback
 from collections import defaultdict
 
-fix = parseSpecification( "FIX.4.2" )
+fix = parse_specification( "FIX.4.2" )
 
 class DelayData:
     def __init__(self):
@@ -61,7 +61,7 @@ class Sender(FIXApplication):
         #print "APP>> %s %s %s" % (msgSeqNum, myOrder, strMsg)
         #self.protocol.transport.write( strMsg )
 
-    def set_state(self, oldState, newState):
+    def set_state(self, old_state, newState):
         self.state = newState
         if newState.__class__==NormalMessageProcessing:
             reactor.callLater( 0.2 , self.startTiming)
@@ -77,7 +77,7 @@ class Sender(FIXApplication):
         strConch = cPickle.dumps( conch )
         testRequestId = self.fix.TestReqID( strConch )
         msg = self.fix.TestRequest( fields = [ testRequestId ] )
-        strMsg = self.session.compileMessage(msg)
+        strMsg = self.session.compile_message(msg)
         self.protocol.transport.write( strMsg )
         reactor.callLater( self.delay, self.startTiming)
 
@@ -94,7 +94,7 @@ class Sender(FIXApplication):
             return
         timeNow = time.time()
         #print "Heartbeat!"
-        request = msg.getOptionalFieldValue( self.fix.TestReqID, None )
+        request = msg.get_optional_field_values( self.fix.TestReqID, None )
         if request is not None:
             try:
                 s = cPickle.loads( request )

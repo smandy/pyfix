@@ -17,22 +17,22 @@ fix_Price    = fix.Price()
 fix_Account  = fix.Account()
 
 def convertFixOrder(self, msg):
-    clOrdID  = msg.getField( fix_ClOrdID ).getString()
-    security = msg.getField( fix_Symbol ).getString()
-    orderQty = int( msg.getField( fix_OrderQty ).getString() )
-    side     = Side.byFixID[ int(msg.getField( fix_Side ).getString()) ]
-    account  = msg.getField( fix_Account).getString()
-    px       = msg.getField( fix_Price ).getValue()
+    clOrdID  = msg.get_field( fix_ClOrdID ).getString()
+    security = msg.get_field( fix_Symbol ).getString()
+    orderQty = int( msg.get_field( fix_OrderQty ).getString() )
+    side     = Side.byFixID[ int(msg.get_field( fix_Side ).getString()) ]
+    account  = msg.get_field( fix_Account).getString()
+    px       = msg.get_field( fix_Price ).getValue()
     return Order( clOrdID, security, orderQty, side, account, px)
 
 def convertFixExecution(self, msg):
-    execType   = ExecType.byFixID[ int(msg.getField( fix.fix_ExecType ).getString() )]
-    execID     = msg.getField( fix.fix_ExecID ).getString()
-    clOrdID    = msg.getField( fix_ClOrdID ).getString()
-    side       = Side.byFixID[ int(msg.getField( fix_Side ).getString()) ]
-    lastShares = int(msg.getField( fix_LastShares).getString())
-    security   = msg.getField( fix_Symbol).getString()
-    lastPx     = float( msg.getField( fix_LastPx ).getString() )
+    execType   = ExecType.byFixID[ int(msg.get_field( fix.fix_ExecType ).getString() )]
+    execID     = msg.get_field( fix.fix_ExecID ).getString()
+    clOrdID    = msg.get_field( fix_ClOrdID ).getString()
+    side       = Side.byFixID[ int(msg.get_field( fix_Side ).getString()) ]
+    lastShares = int(msg.get_field( fix_LastShares).getString())
+    security   = msg.get_field( fix_Symbol).getString()
+    lastPx     = float( msg.get_field( fix_LastPx ).getString() )
     #isFill    = self.lastShares>0
     return Execution( execType, execID, clOrdID, side, lastShares, security. lastPx)
 

@@ -1,70 +1,71 @@
 from pyfix.FIXParser import SynchronousParser, ParseException
 import cPickle
 
+
 class RecoveryException(Exception):
     pass
 
+
 class FIXApplication(object):
     def __init__(self, fix):
-        self.state       = None
-        self.protocol    = None
-        self.session     = None
+        self.state = None
+        self.protocol = None
+        self.session = None
         self.perspective = None
-        self.fix      = fix
-        self.dispatchdict = { fix.Heartbeat   : self.noop,
-                              fix.TestRequest : self.noop,}
-        self.recoveryDict = { fix.Heartbeat   : self.noop }
-        self.inRecovery = False
-        #self.perspective = None
+        self.fix = fix
+        self.dispatchdict = {fix.Heartbeat: self.noop,
+                             fix.TestRequest: self.noop, }
+        self.recovery_dict = {fix.Heartbeat: self.noop}
+        self.in_recovery = False
 
     def noop(self, *args):
         pass
- 
-    def setSession(self, session):
+
+    def set_session(self, session):
         assert self.session is None
         self.session = session
 
-    def setProtocol(self, protocol):
+    def set_protocol(self, protocol):
         print "onProtocol %s" % protocol
         assert protocol.session == self.session, "%s vs %s" % (protocol.session, self.session)
         self.protocol = protocol
 
-    def set_state(self, oldState, newState):
-        self.state = newState
+    def set_state(self, old_state, new_state):
+        self.state = new_state
 
-    def onMessage( self, protocol, msg, seq, possDup):
-        assert protocol==self.protocol, "%s vs %s" % ( protocol, self.protocol)
-        msgKlazz = msg.__class__
-        if self.dispatchdict.has_key( msgKlazz ):
-            self.dispatchdict[msgKlazz]( protocol, msg, seq, possDup)
+    def on_message(self, protocol, msg, seq, poss_dup):
+        assert protocol == self.protocol, "%s vs %s" % ( protocol, self.protocol)
+        msg_class = msg.__class__
+        if self.dispatchdict.has_key(msg_class):
+            self.dispatchdict[msg_class](protocol, msg, seq, poss_dup)
         else:
-            print "Warning unmapped message %s" % msgKlazz
+            print "Warning unmapped message %s" % msg_class
 
-    def recoveredMessage(self, msg):
+    def recovered_message(self, msg):
         klazz = msg.__class__
-        if self.recoveryDict.has_key( klazz ):
-            self.recoveryDict[ klazz ](msg)
+        if self.recovery_dict.has_key(klazz):
+            self.recovery_dict[klazz](msg)
         else:
             print "Unmapped recovery message %s" % klazz
 
-    def onRecoveryDone(self):
+    def on_recovery_done(self):
         pass
 
     def recover(self):
         assert self.session is not None
-        self.inRecovery = True
-        sp = SynchronousParser( self.fix )
+        self.in_recovery = True
+        sp = SynchronousParser(self.fix)
         c = self.session.persister.ledger.cursor()
         while True:
             d = c.next()
             if not d:
                 break
             try:
-                msg, _,_ = sp.parse( d[1] )
-                self.recoveredMessage( msg )
+                msg, _, _ = sp.parse(d[1])
+                self.recovered_message(msg)
             except ParseException:
-                obj = cPickle.loads( d[1] )
-                self.recoveredMessage( msg )
+                obj = cPickle.loads(d[1])
+                self.recovered_message(msg)
         c.close()
-        self.onRecoveryDone()
-        self.inRecovery = False
+        self.on_recovery_done()
+        self.in_recovery = False

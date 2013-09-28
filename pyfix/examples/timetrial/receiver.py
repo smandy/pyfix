@@ -3,10 +3,10 @@
 import yaml
 
 from pyfix.FIXProtocol   import SessionManager
-from pyfix.FIXSpec       import parseSpecification
+from pyfix.FIXSpec       import parse_specification
 from pyfix.FIXConfig import makeConfig
 
-fix = parseSpecification( version= "FIX.4.2" )
+fix = parse_specification( version= "FIX.4.2" )
 config = yaml.load( open('../config/receiver.yaml','r') )
 
 if __name__=='__main__':

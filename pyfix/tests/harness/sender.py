@@ -1,12 +1,12 @@
 from pyfix.FIXProtocol import InitiatingFIXProtocol, SessionManager
-from pyfix.FIXSpec import parseSpecification
+from pyfix.FIXSpec import parse_specification
 from datetime import datetime
 
 from phroms.tx.fixConfig import NativeConfig
 from twisted.internet import reactor
 import yaml
 
-fix = parseSpecification( "FIX.4.2" )
+fix = parse_specification( "FIX.4.2" )
 class SendingProtocol(InitiatingFIXProtocol):
     def __init__(self, *args, **kwargs):
         InitiatingFIXProtocol.__init__(self, *args, **kwargs)
@@ -40,8 +40,8 @@ class SendingProtocol(InitiatingFIXProtocol):
 
         newFields = [ fieldDict.get( x.__class__, x ) for x in fields ]
         myOrder = f.OrderSingle( fields = newFields )
-        strMsg = self.session.compileMessage( myOrder )
-        msgSeqNum = myOrder.getHeaderFieldValue( self.fix.MsgSeqNum)
+        strMsg = self.session.compile_message( myOrder )
+        msgSeqNum = myOrder.get_header_field_value( self.fix.MsgSeqNum)
         print "APP>> %s %s %s" % (msgSeqNum, myOrder, strMsg)
         self.transport.write( strMsg )
 
@@ -56,8 +56,8 @@ class SendingProtocol(InitiatingFIXProtocol):
                                            f.TransactTime( datetime.now() ),
                                            f.OrdType.MARKET]
                                 )
-        strMsg = self.session.compileMessage( myOrder )
-        msgSeqNum = myOrder.getHeaderFieldValue( self.fix.MsgSeqNum)
+        strMsg = self.session.compile_message( myOrder )
+        msgSeqNum = myOrder.get_header_field_value( self.fix.MsgSeqNum)
         print "APP>> %s %s %s" % (msgSeqNum, myOrder, strMsg)
         self.transport.write( strMsg )
 

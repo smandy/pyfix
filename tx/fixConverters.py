@@ -44,14 +44,14 @@ class FixConverter:
         self.execIDGen = execIDGen
 
     def convertForeignOrderToLocal(self, msg, defaultAccount = None):
-        clOrdID     = msg.getField( fix_ClOrdID ).getString()
-        strSecurity = msg.getField( fix_Symbol ).getString()
-        orderQty    = int( msg.getField( fix_OrderQty ).getString() )
+        clOrdID     = msg.get_field( fix_ClOrdID ).getString()
+        strSecurity = msg.get_field( fix_Symbol ).getString()
+        orderQty    = int( msg.get_field( fix_OrderQty ).getString() )
         try:
-            side     = Side.Side.byFixID[ int(msg.getField( fix_Side ).getString()) ]
+            side     = Side.Side.byFixID[ int(msg.get_field( fix_Side ).getString()) ]
         except:
             print "int failed trying ord"
-            side     = Side.Side.byFixID[ ord(msg.getField( fix_Side ).getString()) ]
+            side     = Side.Side.byFixID[ ord(msg.get_field( fix_Side ).getString()) ]
 
         # TODO - maybe the converter needs to be able to do it's own lookup for dodgy clients -
         # external brokers will quite happily do something wierd.... have a lookupSecurity method or something
@@ -64,25 +64,25 @@ class FixConverter:
             sec = Security()
             sec.ticker = strSecurity
 
-        strAccount = msg.getField( fix_Account).getString()
+        strAccount = msg.get_field( fix_Account).getString()
         if strAccount is not None and strAccount!='':
             account  = self.accountManager.getByName( strAccount )
         else:
             assert defaultAccount is not None, "Can't resolve account : none specified and no default"
             # responsibility of pyfix engine to tag session-specific default to this account
             account = defaultAccount
-        px       = msg.getField( fix_Price ).getValue()
+        px       = msg.get_field( fix_Price ).getValue()
         return Order( clOrdID, sec, orderQty, side, account, px)
 
     def convertForeignExecutionToLocal( self, msg ):
         try:
-            execType   = ExecType.byFixID[ int(msg.getField( fix_ExecType ).getString() )]
-            execID     = msg.getField( fix_ExecID ).getString()
-            clOrdID    = msg.getField( fix_ClOrdID ).getString()
-            side       = Side.Side.byFixID[ int(msg.getField( fix_Side ).getString()) ]
-            lastShares = int(msg.getField( fix_LastShares).getString())
-            security   = self.sm.getByFields( ['ticker','ric'] ,  msg.getField( fix_Symbol).getString() )
-            lastPx     = float( msg.getField( fix_LastPx ).getString() )
+            execType   = ExecType.byFixID[ int(msg.get_field( fix_ExecType ).getString() )]
+            execID     = msg.get_field( fix_ExecID ).getString()
+            clOrdID    = msg.get_field( fix_ClOrdID ).getString()
+            side       = Side.Side.byFixID[ int(msg.get_field( fix_Side ).getString()) ]
+            lastShares = int(msg.get_field( fix_LastShares).getString())
+            security   = self.sm.getByFields( ['ticker','ric'] ,  msg.get_field( fix_Symbol).getString() )
+            lastPx     = float( msg.get_field( fix_LastPx ).getString() )
             #isFill    = self.lastShares>0
             return Execution( execType, execID, clOrdID, side, lastShares, security,  lastPx )
         except:

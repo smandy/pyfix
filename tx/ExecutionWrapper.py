@@ -20,13 +20,13 @@ class ExecutionWrapper(pb.Copyable, pb.RemoteCopy, BusinessObject):
     def __init__(self, msg=None):
         if msg: # Need no-arg ctor for persistence
             try:
-                self.execType   = ExecType.byFixID[ int(msg.getField( fix_ExecType ).getString() )]
-                self.clOrdID    = msg.getField( fix_ClOrdID ).getString()
-                self.execID     = msg.getField( fix_ExecID ).getString()
-                self.side       = Side.byFixID[ int(msg.getField( fix_Side ).getString()) ]
-                self.lastShares = int(msg.getField( fix_LastShares).getString())
-                self.security   = msg.getField( fix_Symbol).getString()
-                self.lastPx     = float( msg.getField( fix_LastPx ).getString() )
+                self.execType   = ExecType.byFixID[ int(msg.get_field( fix_ExecType ).getString() )]
+                self.clOrdID    = msg.get_field( fix_ClOrdID ).getString()
+                self.execID     = msg.get_field( fix_ExecID ).getString()
+                self.side       = Side.byFixID[ int(msg.get_field( fix_Side ).getString()) ]
+                self.lastShares = int(msg.get_field( fix_LastShares).getString())
+                self.security   = msg.get_field( fix_Symbol).getString()
+                self.lastPx     = float( msg.get_field( fix_LastPx ).getString() )
                 self.isFill = self.lastShares>0
             except:
                 print "Dodgy message : %s" % msg

@@ -1,15 +1,15 @@
-from pyfix.FIXSpec import parseSpecification, BusinessReject
+from pyfix.FIXSpec import parse_specification, BusinessReject
 import unittest
 
 from datetime import datetime 
 
-fix = parseSpecification( 'FIX.4.2')
+fix = parse_specification( 'FIX.4.2')
 
 #Noddy Change
 
 class FieldTest( unittest.TestCase ):
     def __str__(self):
-        return "%s %s" % ( unittest.TestCase.__str__(self), self.field.toFix() )
+        return "%s %s" % ( unittest.TestCase.__str__(self), self.field.to_fix() )
 
     __repr__=__str__
 

@@ -26,7 +26,7 @@ class RejectTester(SessionTester):
         self.squirrelOrder = None
         self.acceptorSession.onIntegrityException = self.onAcceptorIntegrityException
         self.acceptorSession.onBusinessMessageReject = self.onAcceptorBusinessReject
-        self.initiatorSession.compileMessage = MethodType( compileMessageNoPersist,self.initiatorSession )
+        self.initiatorSession.compile_message = MethodType( compileMessageNoPersist,self.initiatorSession )
 
     #def onBusinessReject(self, e ):
     #    import random
@@ -49,8 +49,8 @@ class RejectTester(SessionTester):
         challenge = "TEST_%s" % str(str( random.random() )[2:15])
         testRequestId = fix.TestReqID( challenge ) 
         msg = fix.TestRequest( fields = [ testRequestId ] )
-        strMsg = self.initiatorSession.compileMessage(msg)
-        msgSeqNum = msg.getHeaderFieldValue( fix.MsgSeqNum)
+        strMsg = self.initiatorSession.compile_message(msg)
+        msgSeqNum = msg.get_header_field_value( fix.MsgSeqNum)
         print ">>> %s %s %s" % (msgSeqNum, msg , strMsg)
         self.initiatorSession.protocol.transport.write( strMsg )
         #reactor.callLater( 1, self.ic.protocol.factory.logoff )
@@ -77,7 +77,7 @@ class RejectTester(SessionTester):
         return s
 
     def onBusinessMessageReject( self, protocol, msg, seq, possdup):
-        print "onBusinessMessageReject %s" % msg.getFieldValue( fix.Text )
+        print "onBusinessMessageReject %s" % msg.get_field_value( fix.Text )
         msg.dump()
         self.businessMessageReject = msg
         assert self.initiatorSession.isConnected()
@@ -178,8 +178,8 @@ class OmitSequenceNumber( IntegrityTester ):
         challenge = "TEST_%s" % str(str( random.random() )[2:15])
         testRequestId = fix.TestReqID( challenge ) 
         msg = fix.TestRequest( fields = [ testRequestId ] )
-        strMsg = self.initiatorSession.compileMessage(msg)
-        msgSeqNum = msg.getHeaderFieldValue( fix.MsgSeqNum)
+        strMsg = self.initiatorSession.compile_message(msg)
+        msgSeqNum = msg.get_header_field_value( fix.MsgSeqNum)
         print ">>> %s %s %s" % (msgSeqNum, msg , strMsg)
         self.initiatorSession.protocol.transport.write( strMsg )
         #print "Scheduling logoff"
@@ -190,24 +190,24 @@ class OmitSequenceNumber( IntegrityTester ):
         msg = makeOrder(fix)
         import new
         # Slot in a new compile method for one invocation
-        oldCompiler = self.initiatorSession.compileMessage
-        self.initiatorSession.compileMessage = new.instancemethod( compileMessageOmitSequenceNumber,
+        oldCompiler = self.initiatorSession.compile_message
+        self.initiatorSession.compile_message = new.instancemethod( compileMessageOmitSequenceNumber,
                                                                    self.initiatorSession )
-        strMsg = self.initiatorSession.compileMessage(msg, disableValidation = True )
+        strMsg = self.initiatorSession.compile_message(msg, disableValidation = True )
         # Return to original state
-        self.initiatorSession.compileMessage = oldCompiler
+        self.initiatorSession.compile_message = oldCompiler
         return msg, strMsg
     
 class OmitMandatoryField( BusinessRejectTester ):
     def _makeOrder(self):
         msg = makeOrderWithMissingField(fix)
-        strMsg = self.initiatorSession.compileMessage(msg, disableValidation = True )
+        strMsg = self.initiatorSession.compile_message(msg, disableValidation = True )
         return msg, strMsg
 
 class IncludeIllegalField( BusinessRejectTester ):
     def _makeOrder(self):
         msg =  makeOrderWithIllegalField(fix)
-        strMsg = self.initiatorSession.compileMessage(msg, disableValidation = True )
+        strMsg = self.initiatorSession.compile_message(msg, disableValidation = True )
         return msg, strMsg
 
 class OmitMandatoryHeaderField( BusinessRejectTester ):
@@ -226,11 +226,11 @@ class OmitMandatoryHeaderField( BusinessRejectTester ):
         msg, asFix = BusinessRejectTester._makeOrder(self)
         import new
         # Slot in a new compile method for one invocation
-        oldCompiler = self.initiatorSession.compileMessage
-        self.initiatorSession.compileMessage = new.instancemethod( compileMessageOmitMandatoryHeaderField,
+        oldCompiler = self.initiatorSession.compile_message
+        self.initiatorSession.compile_message = new.instancemethod( compileMessageOmitMandatoryHeaderField,
                                                                    self.initiatorSession )
-        strMsg = self.initiatorSession.compileMessage(msg, disableValidation = True )
-        self.initiatorSession.compileMessage = oldCompiler
+        strMsg = self.initiatorSession.compile_message(msg, disableValidation = True )
+        self.initiatorSession.compile_message = oldCompiler
         return msg, strMsg
 
 def test_suite():
