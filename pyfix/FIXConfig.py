@@ -2,7 +2,7 @@
 #import quickfix as pyfix
 from pprint import pprint as pp
 
-def makeDictionary(d):
+def make_dictionary(d):
     ret = fix.Dictionary()
     for q,v in d.items():
         ret.setString(q, v)

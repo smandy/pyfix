@@ -63,7 +63,7 @@ class Message(object):
                  footer_fields=[],
                  is_native=True,
                  sort_fields=False):
-        self.heaer_fields = header_fields
+        self.header_fields = header_fields
         self.footer_fields = footer_fields
         # If things get painful remove this line. Don't know how critical this is
         if sort_fields:
@@ -78,7 +78,7 @@ class Message(object):
         return "%s" % self.MessageName
 
     def to_fix(self):
-        return "".join([x.to_fix() for x in self.heaer_fields + self.fields + self.footer_fields])
+        return "".join([x.to_fix() for x in self.header_fields + self.fields + self.footer_fields])
 
     def get_field(self, klazz):
         # XXX WTF!!!
@@ -103,7 +103,7 @@ class Message(object):
         return self.get_field(klazz).value
 
     def get_header_field(self, klazz):
-        for x in self.heaer_fields:
+        for x in self.header_fields:
             if x.__class__ == klazz:
                 return x
         return None
@@ -119,15 +119,15 @@ class Message(object):
         return [x for x in self.fields if x.__class__ == msgClass]
 
     def calc_body_length(self, mutate=False):
-        length = int(sum([x.size for x in self.heaer_fields[2:] + self.fields]))
+        length = int(sum([x.size for x in self.header_fields[2:] + self.fields]))
         if mutate:
             # Okay so here we're blowing away one field but
             # want to leave fields as immutable for now
-            self.heaer_fields[1] = self.fix.BodyLength(length)
+            self.header_fields[1] = self.fix.BodyLength(length)
         return length
 
     def calc_check_sum(self, mutate=False):
-        checksum = "%03d" % (sum([x.checkSum for x in self.heaer_fields + self.fields + self.footer_fields[:-1]]) % 256)
+        checksum = "%03d" % (sum([x.checksum for x in self.header_fields + self.fields + self.footer_fields[:-1]]) % 256)
         if mutate:
             # Ditto - prefer to replace fields entirely rather
             # than try to mutate them in place
@@ -142,16 +142,16 @@ class Message(object):
 
     def check_body_length(self):
         calc_length = self.calc_body_length()
-        cf_length = self.heaer_fields[1].value
+        cf_length = self.header_fields[1].value
         if not calc_length == cf_length:
             raise MessageIntegrityException("Body Length %s expected %s" % (cf_length, calc_length ), self)
 
     def check_structure(self):
         if not self.get_header_field(self.fix.MsgSeqNum): raise MessageIntegrityException("No Sequence number!", self)
-        if not self.heaer_fields: raise MessageIntegrityException("Can't calc body on msg without a header!", self)
-        if not self.heaer_fields[0].__class__ == self.fix.BeginString: raise MessageIntegrityException(
+        if not self.header_fields: raise MessageIntegrityException("Can't calc body on msg without a header!", self)
+        if not self.header_fields[0].__class__ == self.fix.BeginString: raise MessageIntegrityException(
             "First field in header has to be a begin!", self)
-        if not self.heaer_fields[1].__class__ == self.fix.BodyLength:  raise MessageIntegrityException(
+        if not self.header_fields[1].__class__ == self.fix.BodyLength:  raise MessageIntegrityException(
             "Second field in header must be BodyLength", self)
         if not self.footer_fields: raise MessageIntegrityException("Can't validate msg without a footer!", self)
         footer_idx = None
@@ -162,12 +162,12 @@ class Message(object):
         if footer_idx is None: raise MessageIntegrityException("Can't find checksum in trailer fields", self)
 
     def dump(self, prefix=''):
-        lines = ["=" * 20] + self.heaer_fields + self.fields + self.footer_fields + ["=" * 20]
+        lines = ["=" * 20] + self.header_fields + self.fields + self.footer_fields + ["=" * 20]
         for x in lines:
             print prefix + " " + str(x)
 
     def get_dump(self, prefix=''):
-        lines = [str(x) for x in self.heaer_fields + self.fields + self.footer_fields]
+        lines = [str(x) for x in self.header_fields + self.fields + self.footer_fields]
         return lines
 
     def validate(self):
@@ -182,8 +182,8 @@ class Message(object):
         # By now we've got something well formed, anything thrown from here on in
         # we shold be able to respond to with a reasonable business reject message
         # From here on in we through BusinessRejects
-        self.header_missing = fix.StandardHeader.mandatoryFieldDict.copy()
-        for field in self.heaer_fields:
+        self.header_missing = fix.standard_header.mandatory_field_dict.copy()
+        for field in self.header_fields:
             field.validate(fix)
             try:
                 del self.header_missing[field.__class__]
@@ -220,7 +220,7 @@ class Message(object):
             raise BusinessReject("Missing Mandatory Fields (%s)" % ",".join(missing), self,
                                  fix.SessionRejectReason.REQUIREDTAGMISSING)
 
-        self.footer_missing = fix.StandardTrailer.mandatoryFieldDict.copy()
+        self.footer_missing = fix.standard_trailer.mandatory_field_dict.copy()
         for field in self.footer_fields:
             field.validate(fix)
             try:
@@ -274,7 +274,7 @@ class Field(object):
                 #    raise FieldValueException("Failed Validation on %s <%s> %s" %
                 #                              (self.FieldName, str( self.__class__.Type ) , self.__class__.__bases__[0] ) )
         if collector:
-            collector[self.collectorIndex].append(self)
+            collector[self.collector_index].append(self)
 
         # Amortise the checksum calculation. The field will have done
         # the majority of the checksum/size calculation at class
@@ -499,7 +499,7 @@ subClasses = {'UTCTimestamp': UTCTimeStampField,
 
 
 def parse_specification(version="FIX.4.2",
-                        file_root="/home/andy/wc/resources/pyfix/pyfix-repository"):
+                        file_root="/home/andy/wc/resources/fix/fix-repository"):
     fix = FixSpec()
     fix.version = version
     version_root = os.path.join(file_root, version)
@@ -560,7 +560,7 @@ def parse_specification(version="FIX.4.2",
 
     # Fix up our enumerations.
     for q, builder in enum_lookup.items():
-        cls = builder.instanceClass
+        cls = builder.instance_class
         lookup_by_description = {}
         lookup_by_value = {}
         description_for_field = {}
@@ -580,7 +580,7 @@ def parse_specification(version="FIX.4.2",
             setattr(cls, q, v)
 
     for q, builder in enum_lookup.items():
-        cls = builder.instanceClass
+        cls = builder.instance_class
         cls.__bases__ = (EnumField,)
 
     ################################################################################
@@ -599,10 +599,10 @@ def parse_specification(version="FIX.4.2",
         target = content_by_message_id[target_message_id]
         assert x['Reqd'] in ['0', '1'], "Required field expected string zero or one"
         if x['Reqd'] == '0':
-            target.optionalFields.append(obj)
+            target.optional_fields.append(obj)
         else:
-            target.mandatoryFields.append(obj)
-        target.allFields.append(obj)
+            target.mandatory_fields.append(obj)
+        target.all_fields.append(obj)
 
         if not field_by_id.has_key(target_field_id):
             #print "Couldn't find field %s continuing %s"  % (targetFieldID, x)
@@ -682,24 +682,24 @@ def parse_specification(version="FIX.4.2",
         (class_name, class_dict) = n_d
         field_holder = content_by_message_id[msgID]
 
-        for field in field_holder.mandatoryFields:
+        for field in field_holder.mandatory_fields:
             assert field is not None
 
-        for field in field_holder.optionalFields:
+        for field in field_holder.optional_fields:
             assert field is not None
 
-        class_dict['pyfix'] = fix
+        class_dict['fix'] = fix
         class_dict['MessageName'] = class_name
-        class_dict['mandatoryFields'] = field_holder.mandatoryFields
-        class_dict['optionalFields'] = field_holder.optionalFields
-        class_dict['allFields'] = field_holder.allFields
-        class_dict['mandatoryFieldDict'] = dict([(x.field, None) for x in field_holder.mandatoryFields[1:-1]])
-        class_dict['optionalFieldDict'] = dict([(x.field, None) for x in field_holder.optionalFields])
+        class_dict['mandatoryFields'] = field_holder.mandatory_fields
+        class_dict['optionalFields'] = field_holder.optional_fields
+        class_dict['allFields'] = field_holder.all_fields
+        class_dict['mandatoryFieldDict'] = dict([(x.field, None) for x in field_holder.mandatory_fields[1:-1]])
+        class_dict['optionalFieldDict'] = dict([(x.field, None) for x in field_holder.optional_fields])
         d = class_dict['mandatoryFieldDict'].copy()
         d.update(class_dict['optionalFieldDict'])
         class_dict['allFieldDict'] = d
         class_dict['fieldLookup'] = dict(
-            [(x.field, x) for x in field_holder.mandatoryFields[1:-1] + field_holder.optionalFields])
+            [(x.field, x) for x in field_holder.mandatory_fields[1:-1] + field_holder.optional_fields])
         class_dict['msgTypeField'] = field_by_name['MsgType'](class_dict['MsgType'])
         cls = type(class_name, (Message, ), class_dict)
         message_by_name[class_name] = cls
@@ -716,7 +716,7 @@ def parse_specification(version="FIX.4.2",
     # Message Type field I'll leave blank.
     # Thought about an arbitrary 'null' message field.
     # But would be too hacky.
-    unknown_dict = {'pyfix': fix,
+    unknown_dict = {'fix': fix,
                    'MessageName': 'Unknown',
                    'mandatoryFields': [],
                    'optionalFields': [],

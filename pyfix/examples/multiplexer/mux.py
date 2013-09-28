@@ -10,7 +10,8 @@ from pyfix.FIXPerspective import FIXPerspective
 
 from pyfix.util.randomOrders import extensions
 
-fix = parse_specification("FIX.4.2")
+fix = parse_specifXcation("FIX.4.2")
+
 
 
 class Multiplexer(object):

@@ -16,7 +16,7 @@ fix = parse_specification("FIX.4.2")
 class OrderSource(FIXApplication):
     def __init__(self, sender_comp_id):
         FIXApplication.__init__(sender_comp_id, fix)
-        self.dispatchdict = {fix.ExecutionReport: self.on_execution}
+        self.dispatch_dict = {fix.ExecutionReport: self.on_execution}
         self.sender_comp_id = sender_comp_id
 
     def set_state(self, old_state, new_state):

@@ -13,8 +13,8 @@ class FIXApplication(object):
         self.session = None
         self.perspective = None
         self.fix = fix
-        self.dispatchdict = {fix.Heartbeat: self.noop,
-                             fix.TestRequest: self.noop, }
+        self.dispatch_dict = {fix.Heartbeat: self.noop,
+                              fix.TestRequest: self.noop, }
         self.recovery_dict = {fix.Heartbeat: self.noop}
         self.in_recovery = False
 
@@ -36,8 +36,8 @@ class FIXApplication(object):
     def on_message(self, protocol, msg, seq, poss_dup):
         assert protocol == self.protocol, "%s vs %s" % ( protocol, self.protocol)
         msg_class = msg.__class__
-        if self.dispatchdict.has_key(msg_class):
-            self.dispatchdict[msg_class](protocol, msg, seq, poss_dup)
+        if self.dispatch_dict.has_key(msg_class):
+            self.dispatch_dict[msg_class](protocol, msg, seq, poss_dup)
         else:
             print "Warning unmapped message %s" % msg_class
 
