@@ -164,7 +164,7 @@ class QuickFixTwistedBridge(object):
         if self.orderManager:
             execution = self.fixConverter.convertForeignExecutionToLocal(message)
             print "Execution is %s" % execution
-            self.orderManager.onExecution( execution )
+            self.orderManager.on_execution( execution )
             # OrderManager should persist ( or not)
 
     def sendOrder(self, localOrder ):

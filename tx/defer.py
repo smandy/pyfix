@@ -55,7 +55,7 @@ class DeferringApplication(fix.Application):
     def onExecution(self, message, sessionID ):
         if 'orderManager' in self.__dict__:
             wrapper = fixConverters.convertFixExecution(message)
-            functor = MessageFunctor( self.orderManager.onExecution, wrapper, self.persister)
+            functor = MessageFunctor( self.orderManager.on_execution, wrapper, self.persister)
             reactor.callFromThread(functor)
 
     def onLogon( self, sessionID ):

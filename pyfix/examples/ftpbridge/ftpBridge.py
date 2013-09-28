@@ -37,12 +37,15 @@ class MyFTPShell(FTPShell):
     def __init__(self, app):
         # Any attempt to access the filesystem will choke now since I've not
         # set filesystem root. Find
+        """
+
+        @type self: object
+        """
         print "MyFTPShell : %s" % app
         self.app = app
 
         self.filesystemRoot = FilePath('/home/andy')
         pass
-
 
 
     def list(self, path, keys=()):
@@ -60,10 +63,10 @@ class MyFTPRealm(FTPRealm):
         self.app = app
         self.avatar = None
 
-    def requestAvatar(self, avatarId, mind, *interfaces):
+    def requestAvatar(self, avatar_id, mind, *interfaces):
         for iface in interfaces:
             if iface is IFTPShell:
-                if avatarId is ANONYMOUS:
+                if avatar_id is ANONYMOUS:
                     avatar = FTPAnonymousShell(self.anonymousRoot)
                 else:
                     avatar = MyFTPShell(self.app)

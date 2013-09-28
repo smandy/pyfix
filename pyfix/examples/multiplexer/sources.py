@@ -16,7 +16,7 @@ fix = parseSpecification("FIX.4.2")
 class OrderSource(FIXApplication):
     def __init__(self, sender_comp_id):
         FIXApplication.__init__(sender_comp_id, fix)
-        self.dispatchdict = {fix.ExecutionReport: self.onExecution}
+        self.dispatchdict = {fix.ExecutionReport: self.on_execution}
         self.sender_comp_id = sender_comp_id
 
     def set_state(self, old_state, new_state):
@@ -40,13 +40,12 @@ class OrderSource(FIXApplication):
             self.protocol.transport.write(str_msg)
         self.schedule_order_send()
 
-    def onExecution(self, protocol, msg, seq, possDup):
-        #print "Got an execution !"
-        clordid= msg.getFieldValue(self.fix.ClOrdID)
-        if not clordid.startswith(self.sender_comp_id):
+    def on_execution(self, ign1, msg, ign2, ign3):
+        #print "Got an execign1tion !"
+        ClOrdID = msg.getFieldValue(self.fix.ClOrdID)
+        if not ClOrdID.startswith(self.sender_comp_id):
             print "ERROR !!! Unexpected execution"
             #msg.dump()
-
 
 config = yaml.load(open('./sources.yaml', 'r'))
 senderConfig = makeConfig(config)
