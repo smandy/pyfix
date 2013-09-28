@@ -14,7 +14,7 @@ fix = parse_specification(version="FIX.4.2")
 class Receiver(FIXApplication):
     def __init__(self):
         FIXApplication.__init__(self, fix)
-        self.dispatchdict = {fix.OrderSingle: self.on_order}
+        self.dispatch_dict = {fix.OrderSingle: self.on_order}
 
     def on_order(self, protocol, order, seq, dup):
         assert order.__class__ == fix.OrderSingle

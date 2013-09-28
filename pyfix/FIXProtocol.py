@@ -34,11 +34,11 @@ class FIXState:
     def isInSequence(self, msgSeqNum):
         assert type(msgSeqNum) == IntType, "Need a sequence number"
         assert self.protocol.session is not None, "Session not connected"
-        return msgSeqNum == self.protocol.session.inMsgSeqNum
+        return msgSeqNum == self.protocol.session.in_msg_seq_num
 
 
 class AwaitingLogout(FIXState):
-    def onMsg(self, msg, ign, ign1):
+    def on_msg(self, msg, ign, ign1):
         """
 :param msg:
         :param ign:
@@ -56,20 +56,20 @@ class AwaitingLogon(FIXState):
     def logon_processing(self, _):
         assert False, "Override me!"
 
-    def onMsg(self, msg, inMsgSeqNum, possDupFlag):
+    def on_msg(self, msg, in_msg_seq_num, poss_dup_flag):
         assert msg.__class__ == self.fix.Logon
-        assert not possDupFlag
+        assert not poss_dup_flag
 
         self.logon_processing(msg)
 
-        if self.isInSequence(inMsgSeqNum):
+        if self.isInSequence(in_msg_seq_num):
             print "In Sequence Logon"
-            self.protocol.session.persist_and_advance(msg.to_fix(), checkInSequence=True)
-            self.protocol.set_state(self.protocol.normalMessageProcessing)
+            self.protocol.session.persist_and_advance(msg.to_fix(), check_in_sequence=True)
+            self.protocol.set_state(self.protocol.normal_message_processing)
         else:
             print "Out of sequence logon"
             #self.protocol.factory.inMsgSeqNum = msgSeqNum+1
-            self.protocol.set_state(GapProcessing(self.protocol, msg, inMsgSeqNum))
+            self.protocol.set_state(GapProcessing(self.protocol, msg, in_msg_seq_num))
         self.protocol.send_heartbeat()
 
 
@@ -84,7 +84,7 @@ class AcceptorAwaitingLogon(AwaitingLogon):
 
         # The Acceptor factory has a map of compids.
         # if we find one we wire it up
-        session = self.protocol.factory.getSessionForMessage(msg)
+        session = self.protocol.factory.get_session_for_message(msg)
         print "Found session %s" % session
         if session:
             #self.protocol.session = session
@@ -146,7 +146,7 @@ class AcceptorAwaitingLogon(AwaitingLogon):
 
 
 class LoggedOut(FIXState):
-    def onMsg(self, *args):
+    def on_msg(self, *args):
         print "Ignorning msg %s" % str(args)
 
 
@@ -203,7 +203,7 @@ class NormalMessageProcessing(FIXState):
                 self.in_sequence_dict[klazz](*args)
                 # Let the application have a bash at it
 
-            perspective = self.protocol.session.sessionManager.perspective
+            perspective = self.protocol.session.session_manager.perspective
             if perspective:
                 if msg.__class__ == self.fix.ExecutionReport:
                     perspective.on_execution(self.protocol, msg)
@@ -211,11 +211,11 @@ class NormalMessageProcessing(FIXState):
                     perspective.on_order(self.protocol, msg)
 
             self.protocol.session.app.on_message(self.protocol, *args)
-            s.persist_and_advance(msg.to_fix(), checkInSequence=True)
+            s.persist_and_advance(msg.to_fix(), check_in_sequence = True)
         else:
             if self.out_of_sequence_dict.has_key(klazz):
                 self.out_of_sequence_dict[klazz](*args)
-            print "Out of sequence message got %s expecting %s" % (msg_seq_num, self.protocol.session.inMsgSeqNum)
+            print "Out of sequence message got %s expecting %s" % (msg_seq_num, self.protocol.session.in_msg_seq_num)
 
             gap_processor = GapProcessing(self.protocol, msg, msg_seq_num)
             self.protocol.set_state(gap_processor)
@@ -225,33 +225,33 @@ class NormalMessageProcessing(FIXState):
 
 
 class LoggedOut(FIXState):
-    def onMsg(self, *args):
+    def on_msg(self, *args):
         print "Ignoring msg - logged out %s" % str(args)
         pass
 
 
 class GapProcessing(FIXState):
-    def __init__(self, protocol, msg, msgSeqNum):
+    def __init__(self, protocol, msg, msg_seq_num):
         FIXState.__init__(self, protocol)
         self.gaps = {}
         self.gap_queue = {}
-        self.last_sequence = msgSeqNum
+        self.last_sequence = msg_seq_num
 
         # TODO - these could actually be stored off to another persister somewhere
         self.pending_application_messages = {}
 
-        print "out of sequence message got %s expecting %s" % (msgSeqNum, self.protocol.session.inMsgSeqNum)
-        resend_request = self.fix.ResendRequest(fields=[self.fix.BeginSeqNo(self.protocol.session.inMsgSeqNum),
+        print "out of sequence message got %s expecting %s" % (msg_seq_num, self.protocol.session.in_msg_seq_num)
+        resend_request = self.fix.ResendRequest(fields=[self.fix.BeginSeqNo(self.protocol.session.in_msg_seq_num),
                                                         self.fix.EndSeqNo(0)])
 
         message_string = self.protocol.session.compile_message(resend_request)
         print "Sending resend request %s" % message_string
         resend_request.dump(">>>")
         self.protocol.transport.write(message_string)
-        for i in range(self.protocol.session.inMsgSeqNum, msgSeqNum + 1):
+        for i in range(self.protocol.session.in_msg_seq_num, msg_seq_num + 1):
             self.gaps[i] = resend_request
 
-        self.protocol.session.in_msg_seq_num = msgSeqNum + 1
+        self.protocol.session.in_msg_seq_num = msg_seq_num + 1
         print "In Gap processing : Gaps are %s" % str(self.gaps)
 
     def failure(self, *args):
@@ -284,7 +284,7 @@ class GapProcessing(FIXState):
                 self.protocol.on_resend_request(*args)
                 if self.isInSequence(msg_seq_num):
                     #print "Persisting resend request"
-                    self.protocol.session.persist_and_advance(msg.to_fix(), checkInSequence=True)
+                    self.protocol.session.persist_and_advance(msg.to_fix(), check_in_sequence=True)
                 else:
                     print "Resend request was out of sequence %s vs %s" % (
                         self.protocol.session.in_msg_seq_num, msg_seq_num )
@@ -317,12 +317,12 @@ class GapProcessing(FIXState):
                 seq = msg.get_header_field_value(self.fix.MsgSeqNum)
                 if seq < self.protocol.session.in_msg_seq_num:
                     continue
-                self.protocol.session.persist_and_advance(msg.to_fix(), checkInSequence=False)
+                self.protocol.session.persist_and_advance(msg.to_fix(), check_in_sequence =False)
             self.gap_queue = {}
 
             print "Have %s pending application messages %s" % (
                 len(self.pending_application_messages), self.pending_application_messages.keys() )
-            self.protocol.set_state(self.protocol.normalMessageProcessing)
+            self.protocol.set_state(self.protocol.normal_message_processing)
             # If we're here it means we have completed the gap fill process and all missing messages have been accounted
             # for in the gap fill process, and the session.inMsgSeqNum has been set correctly. Anything int the pending queue
             # is a non-gapfill applicaiton message that we'll already have received during msg processing -> filter it out.
@@ -374,7 +374,7 @@ class FIXProtocol(Protocol):
     def __init__(self, fix, state_listeners=None):
         print "Protocol %s %s init" % (self.__class__, fix.version)
         self.fix = fix
-        self.heart_beat_checks = {}
+        self.heartbeat_checks = {}
         self.pending_test_requests = {}
         self.heart_beat_interval = None
         self.factory = None
@@ -392,14 +392,14 @@ class FIXProtocol(Protocol):
         # calls after we''re done
         self.send_heartbeat_call = None
         self.test_request_checks = {}
-        self.heart_beat_checks = {}
+        self.heartbeat_checks = {}
 
         self.state = None
         self.set_state(self.awaiting_logon)
         self.parser = FIXParser(self.fix, self.on_msg)
 
     def set_state(self, s):
-        #print "State change %s->%s" % (self.state.__class__.__name__, s.__class__.__name__)
+        print "State change %s->%s" % (self.state.__class__.__name__, s.__class__.__name__)
         old_state = self.state
         self.state = s
         if self.session:
@@ -427,7 +427,7 @@ class FIXProtocol(Protocol):
         # adding a small randomization ( 1 second standard deviation ) to the interval
         # this should be small enough to prevent any test request cycles but large enough
         # to smooth out heartbeats between multiple sessions
-        delay = random.normalvariate(self.heart_beat_interval, 1)
+        delay = random.normalvariate(self.heartbeat_interval, 1)
         # Or if you're OCD or into Wagner/Kraftwerk/Techno you're probably
         # not a fan of randomness and like regularly spaced metronomic 'doof's
         # - uncomment the line below delay = self.heartbeatInterval
@@ -436,7 +436,7 @@ class FIXProtocol(Protocol):
         self.send_heartbeat_call = reactor.callLater(delay, self.send_heartbeat)
         # We'll rely on our heartbeat but 
         myObj = datetime.now()
-        self.heartBeatChecks[myObj] = reactor.callLater(self.heartBeatInterval * 1.5, self.checkHeartbeat, myObj)
+        self.heartbeat_checks[myObj] = reactor.callLater(self.heartbeat_interval * 1.5, self.check_heartbeat, myObj)
 
     def on_logout(self, msg, in_msg_seq_num, poss_dup_flag):
         print "onLogout %s" % msg
@@ -449,8 +449,8 @@ class FIXProtocol(Protocol):
         reactor.callLater(0, self.clean_up_and_die)
 
     def check_heartbeat(self, token):
-        assert self.heart_beat_checks.has_key(token)
-        del self.heart_beat_checks[token]
+        assert self.heartbeat_checks.has_key(token)
+        del self.heartbeat_checks[token]
         print "Check Heartbeat %s" % token
         if self.state == self.normal_message_processing:
             print "No heartbeat recieved for %s (%s seconds)" % (token, datetime.now() - token)
@@ -505,7 +505,7 @@ class FIXProtocol(Protocol):
             print "Already cleaned up - nothing to do"
         else:
             self.set_state(self.logged_out_state)
-            calls = [self.send_heartbeat_call] + self.test_request_checks.values() + self.heart_beat_checks.values()
+            calls = [self.send_heartbeat_call] + self.test_request_checks.values() + self.heartbeat_checks.values()
             for call in calls:
                 if call:
                     try:
@@ -520,9 +520,9 @@ class FIXProtocol(Protocol):
             # self.parser = None
 
             # quick sanity checks on disconnect
-            assert self.session is not None
-            assert self.session.protocol is self
-            self.session.release_protocol()
+            if self.session:
+                assert self.session.protocol is self
+                self.session.release_protocol()
             print "Cleaned up"
 
     def on_heartbeat(self, msg, seq, dup):
@@ -536,10 +536,10 @@ class FIXProtocol(Protocol):
                 pass
                 #print "Got testRequestID I didn't send!!! %s" % testRequestID
         else:
-            for posted, cb in self.heart_beat_checks.items()[:]:
+            for posted, cb in self.heartbeat_checks.items()[:]:
                 #print "Clearing check %s %s after %s seconds" % ( callable, posted, (now-posted).seconds)
                 cb.cancel()
-                del self.heart_beat_checks[posted]
+                del self.heartbeat_checks[posted]
 
     def on_test_request(self, msg, seq, dup):
         #print "onTestRequest %s" % msg
@@ -562,30 +562,30 @@ class FIXProtocol(Protocol):
 
     def on_resend_request(self, msg, seq, dup):
         begin = msg.get_field_value(self.fix.BeginSeqNo)
-        tmpEnd = msg.get_field_value(self.fix.EndSeqNo)
-        resendDetails = []
+        tmp_end = msg.get_field_value(self.fix.EndSeqNo)
+        resend_details = []
         gap = None
-        db = self.session.outDb
-        if tmpEnd == 0:
-            endSeqNo = self.session.outMsgSeqNum - 1
+        db = self.session.out_db
+        if tmp_end == 0:
+            end_seq_no = self.session.out_msg_seq_num - 1
         else:
-            endSeqNo = tmpEnd
+            end_seq_no = tmp_end
 
-        print "onResendRequest %s-%s Playing back %s-%s" % ( begin, tmpEnd, begin, endSeqNo)
+        print "onResendRequest %s-%s Playing back %s-%s" % ( begin, tmp_end, begin, end_seq_no)
         parser = SynchronousParser(self.fix)
-        for i in range(begin, endSeqNo + 1):
+        for i in range(begin, end_seq_no + 1):
             #print i , "... " ,
             haveMsg = False
             if db.has_key(i):
-                fixMsg = db[i]
-                msg, _, _ = parser.feed(fixMsg)
+                message_string = db[i]
+                msg, _, _ = parser.feed(message_string)
                 #print "Recovered %s" % msg
                 if msg.Section != 'Session':
                     # We have a message to resend
                     if gap:
-                        resendDetails.append(gap)
+                        resend_details.append(gap)
                     gap = None
-                    resendDetails.append(msg)
+                    resend_details.append(msg)
                     haveMsg = True
             if not haveMsg:
                 if gap:
@@ -593,50 +593,53 @@ class FIXProtocol(Protocol):
                 else:
                     gap = [i, i]
         if gap:
-            resendDetails.append(gap)
+            resend_details.append(gap)
 
-        print "Resend Details %s" % len(resendDetails)
+        print "Resend Details %s" % len(resend_details)
         if 1:
-            for obj in resendDetails:
+            for obj in resend_details:
                 if type(obj) == ListType:
                     # Gap Fill
-                    [sendSequenceNumber, lastSequenceNumber] = obj
+                    [send_sequence_number, last_sequence_number] = obj
                     #print "GapFill %s-%s" % (sendSequenceNumber, lastSequenceNumber)
                 else:
-                    origSeq = obj.get_header_field_value(self.fix.MsgSeqNum)
+                    orig_seq = obj.get_header_field_value(self.fix.MsgSeqNum)
                     #obj.dump( "GapFill>>>")
                     #print "gf2 =%s %s %s" % (obj, msg.getHeaderField( self.pyfix.MsgSeqNum ).value, origSeq )
 
-        for obj in resendDetails:
+        for obj in resend_details:
             i = 0
             if type(obj) == ListType:
                 # Gap Fill
-                [sendSequenceNumber, lastSequenceNumber] = obj
-                gapFill = self.fix.SequenceReset(fields=[self.fix.NewSeqNo(lastSequenceNumber + 1),
+                [send_sequence_number, last_sequence_number] = obj
+                gapFill = self.fix.SequenceReset(fields=[self.fix.NewSeqNo(last_sequence_number + 1),
                                                          self.fix.GapFillFlag('Y')])
-                fixMsg = self.session.compile_message(gapFill, possDup=True, forceSequenceNumber=sendSequenceNumber)
-                print "Sending sequence reset %s->%s %s" % ( sendSequenceNumber, lastSequenceNumber + 1, fixMsg)
-                self.transport.write(fixMsg)
+                message_string = self.session.compile_message(gapFill,
+                                                              poss_dup=True,
+                                                              force_sequence_number=send_sequence_number)
+                print "Sending sequence reset %s->%s %s" % (
+                    send_sequence_number, last_sequence_number + 1, message_string)
+                self.transport.write(message_string)
             else:
                 # Hmm wonder if this will work. Header of old msg is going to be blatted
-                origSeq = obj.get_header_field_value(self.fix.MsgSeqNum)
-                print "%10s %s" % (obj, origSeq)
-                origSendingTime = obj.get_header_field_value(self.fix.SendingTime)
-                fixMsg = self.session.compile_message(obj,
-                                                      possDup=True,
-                                                      forceSequenceNumber=origSeq,
-                                                      origSendingTime=origSendingTime)
+                orig_seq = obj.get_header_field_value(self.fix.MsgSeqNum)
+                print "%10s %s" % (obj, orig_seq)
+                orig_sending_time = obj.get_header_field_value(self.fix.SendingTime)
+                message_string = self.session.compile_message(obj,
+                                                              poss_dup=True,
+                                                              force_sequence_number=orig_seq,
+                                                              orig_sending_time=orig_sending_time)
                 #obj.dump("Recovered: " )
                 #print "REC>>> %s %s %s" % (origSeq, obj, fixMsg)
-                self.transport.write(fixMsg)
+                self.transport.write(message_string)
             i += 1
             if i % 100 == 0:
                 print "Recovering %s ..."
 
-    def onSequenceReset(self, msg, seq, dup):
+    def on_sequence_reset(self, msg, seq, dup):
         #print "onSequenceReset %s %s" % ( msg, msg.toFix() )
-        isGapFill = msg.get_optional_field_values(self.fix.GapFillFlag)
-        if isGapFill:
+        is_gap_fill = msg.get_optional_field_values(self.fix.GapFillFlag)
+        if is_gap_fill:
             self.onGapFill(msg)
         else:
             assert False, "Pure sequence reset not handled yet"
@@ -687,7 +690,7 @@ class FIXProtocol(Protocol):
 
         self.state.on_msg(msg, message_seq_num, poss_dup_flag)
         if self.session is not None:
-            self.session.lastByType[message_class] = msg
+            self.session.last_by_type[message_class] = msg
 
 
 class InitiatorFIXProtocol(FIXProtocol):
@@ -697,7 +700,7 @@ class InitiatorFIXProtocol(FIXProtocol):
         assert self.session is not None
         FIXProtocol.connectionMade(self)
         msg = self.fix.Logon(
-            fields=[self.fix.EncryptMethod.NONEOTHER, self.fix.HeartBtInt(self.session.heartbeatInterval)])
+            fields=[self.fix.EncryptMethod.NONEOTHER, self.fix.HeartBtInt(self.session.heartbeat_interval)])
         # THIS SHOULD BE SOME SORT OF METHOD
         message_string = self.session.compile_message(msg)
         msg_seq_num = msg.get_header_field_value(self.fix.MsgSeqNum)
@@ -829,29 +832,29 @@ class Session(object):
                             message_string,
                             check_in_sequence=True):
         msg, _, _ = self.sp.feed(message_string)
-        msgSeq = msg.get_header_field_value(self.fix.MsgSeqNum)
+        msg_seq = msg.get_header_field_value(self.fix.MsgSeqNum)
         if check_in_sequence:
             seq = self.persister.getNextSeq(self.in_db)
             seq2 = self.persister.getNextSeq(self.out_db)
-            assert msgSeq >= seq, "Received %s vs %s %s" % (msgSeq, seq, seq2)
+            assert msg_seq >= seq, "Received %s vs %s %s" % (msg_seq, seq, seq2)
 
-        self.persister.persistInMsg(msgSeq, message_string)
-        self.in_msg_seq_num = msgSeq + 1
+        self.persister.persistInMsg(msg_seq, message_string)
+        self.in_msg_seq_num = msg_seq + 1
 
     def compile_message(self,
                         msg,
-                        poss_dup = False,
-                        force_sequence_number = None,
-                        orig_sending_time = None,
-                        persist = True,
-                        disable_validation = False):
+                        poss_dup=False,
+                        force_sequence_number=None,
+                        orig_sending_time=None,
+                        persist=True,
+                        disable_validation=False):
 
         sending_time = self.fix.SendingTime(datetime.now())
         body_length = self.fix.BodyLength(0)
         check_sum = self.fix.CheckSum(0)
 
-        if forceSequenceNumber:
-            seq = forceSequenceNumber
+        if force_sequence_number:
+            seq = force_sequence_number
         else:
             seq = self.out_msg_seq_num
 
@@ -864,11 +867,11 @@ class Session(object):
                   sending_time
         ]
 
-        if possDup:
+        if poss_dup:
             header = header[:-1] + [self.fix.PossDupFlag('Y')] + header[-1:]
 
-        if origSendingTime:
-            header = header[:-1] + [self.fix.OrigSendingTime(origSendingTime)] + header[-1:]
+        if orig_sending_time:
+            header = header[:-1] + [self.fix.OrigSendingTime(orig_sending_time)] + header[-1:]
 
         footer = [check_sum]
         msg.header_fields = header
@@ -905,9 +908,9 @@ class AcceptorFactory(Factory):
         self.sm = sm
         self.sessions = sessions
 
-    def addSession(self, idTuple, session):
-        assert not self.sessions.has_key(idTuple)
-        self.sessions[idTuple] = session
+    def add_session(self, id_tuple, session):
+        assert not self.sessions.has_key(id_tuple)
+        self.sessions[id_tuple] = session
 
     def buildProtocol(self, addr):
         print "Build Protocol Instance %s %s" % (addr, self.sm.acceptorProtocol)
@@ -915,15 +918,15 @@ class AcceptorFactory(Factory):
         p.factory = self
         return p
 
-    def getSessionForMessage(self, msg):
+    def get_session_for_message(self, msg):
         f = self.sm.fix
         # They're sending to us so we flip the usual sender/target
         # only used for logon at the moment
-        idTuple = ( msg.get_header_field_value(f.TargetCompID),
-                    msg.get_header_field_value(f.SenderCompID) )
-        session = self.sessions.get(idTuple, None)
-        print "Looked up session %s got %s %s" % (str(idTuple), str(session), self.sessions )
-        if not session or not session.wantToBeLoggedIn:
+        id_tuple = ( msg.get_header_field_value(f.TargetCompID),
+                     msg.get_header_field_value(f.SenderCompID) )
+        session = self.sessions.get(id_tuple, None)
+        print "Looked up session %s got %s %s" % (str(id_tuple), str(session), self.sessions )
+        if not session or not session.want_to_be_logged_in:
             return None
         else:
             return session
@@ -938,7 +941,7 @@ class InitiatorFactory(ReconnectingClientFactory):
         self.port = port
 
     def logon(self):
-        self.session.wantToBeLoggedOn = True
+        self.session.want_to_be_logged_in = True
         assert self.session.protocol is None
         return reactor.connectTCP(self.host, self.port, self)
 
@@ -960,8 +963,8 @@ class InitiatorFactory(ReconnectingClientFactory):
 
     def clientConnectionLost(self, connector, reason):
         print 'Lost connection.  Reason:', reason
-        print "Wanttobelogged in %s %s" % (self, self.session.wantToBeLoggedOn)
-        if not self.session.wantToBeLoggedOn:
+        print "Wanttobelogged in %s %s" % (self, self.session.want_to_be_logged_in)
+        if not self.session.want_to_be_logged_in:
             self.stopTrying()
         else:
             ReconnectingClientFactory.clientConnectionLost(self, connector, reason)
@@ -1063,7 +1066,7 @@ class SessionManager(object):
                 af = AcceptorFactory(self, sessionMap)
                 self.acceptorFactories[sessionConfig.port] = af
             else:
-                self.acceptorFactories[sessionConfig.port].addSession(session)
+                self.acceptorFactories[sessionConfig.port].add_session(session)
 
         self.sessionByTuple[idTuple] = session
 

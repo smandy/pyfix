@@ -28,6 +28,8 @@ class SendingProtocol(InitiatorFIXProtocol):
         print "My State change %s -> %s" % (old, newState)
         if newState == self.normal_message_processing:
             self.sendOrder()
+        elif newState==self.logged_out_state:
+            self.session
 
     def sendOrderFromFragments(self, fieldDict):
         f = self.fix

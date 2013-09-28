@@ -23,7 +23,7 @@ class FIXParser:
             self.callback = cb
 
         self.on_discard = on_discard
-        iter_fields = [self.fix.StandardHeader.mandatoryFields + self.fix.StandardTrailer.mandatoryFields]
+        iter_fields = self.fix.standard_header.mandatory_fields + self.fix.standard_trailer.mandatory_fields
         self.min_size = sum([len(x.Tag) + 2 for x in iter_fields])
         self.send_data = send_data
         self.reset()
@@ -110,11 +110,11 @@ class FIXParser:
 
             # This looks like a noop but has the side effect of adding the created field to the appropriate
             # collector bucket
-            fix.fieldByID[key](val, is_native=False, collector=field_collector)
+            fix.field_by_id[key](val, is_native=False, collector=field_collector)
 
             if key == msg_type_tag:
             #if isinstance( field, self.pyfix.MsgType):  -> Hotspot
-                msg_class = fix.messageByID.get(val, fix.UnknownMessage)
+                msg_class = fix.message_by_id.get(val, fix.UnknownMessage)
                 if msg_class == fix.UnknownMessage:
                     exception = BusinessReject("Unknown Message Type %s" % val,
                                                None,
