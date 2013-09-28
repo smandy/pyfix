@@ -1,0 +1,27 @@
+default: {ConnectionType: initiator,
+          HeartbeatInterval: 30, 
+          PersistRoot: ./persist/sources ,
+          Host: localhost,
+          ConnectionType : initiator}
+sessions:
+  - { BeginString: FIX.4.2, SenderCompID: SOURCE1, Port: 10000, TargetCompID: MUX }
+  - { BeginString: FIX.4.2, SenderCompID: SOURCE2, Port: 10000, TargetCompID: MUX }
+  - { BeginString: FIX.4.2, SenderCompID: SOURCE3, Port: 10000, TargetCompID: MUX }
+  - { BeginString: FIX.4.2, SenderCompID: SOURCE4, Port: 10000, TargetCompID: MUX }
+  - { BeginString: FIX.4.2, SenderCompID: SOURCE5, Port: 10000, TargetCompID: MUX }
+  - { BeginString: FIX.4.2, SenderCompID: SOURCE6, Port: 10000, TargetCompID: MUX }
+manhole:
+  listenPort: 2223
+  passwords: { admin : aaa }
+ftpServer:
+  passwords: { admin : aaa }
+webServer:
+  listenPort: 8001
+nevow:
+  listenPort: 8002
+
+  
+
+
+
+

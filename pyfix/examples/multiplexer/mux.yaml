@@ -1,0 +1,33 @@
+default: {ConnectionType: initiator,
+          FileStorePath: store,
+          HeartbeatInterval: 30, 
+          PersistRoot: ../multiplexer/persist/mux, 
+          BeginString: FIX.4.2,
+          Host: localhost,
+          Port: 10000
+          }
+sessions:
+# Sources ( 'Clients' in the real world
+  - { SenderCompID: MUX, TargetCompID: SOURCE1, ConnectionType: acceptor }
+  - { SenderCompID: MUX, TargetCompID: SOURCE2, ConnectionType: acceptor }
+  - { SenderCompID: MUX, TargetCompID: SOURCE3, ConnectionType: acceptor }
+  - { SenderCompID: MUX, TargetCompID: SOURCE4, ConnectionType: acceptor }
+  - { SenderCompID: MUX, TargetCompID: SOURCE5, ConnectionType: acceptor }
+  - { SenderCompID: MUX, TargetCompID: SOURCE6, ConnectionType: acceptor }
+# Sinks ( 'Exchange Connections' in the real world )
+  - { SenderCompID: MUX, Port: 10001, TargetCompID: SINK1 }
+  - { SenderCompID: MUX, Port: 10002, TargetCompID: SINK2 }
+  - { SenderCompID: MUX, Port: 10003, TargetCompID: SINK3 }
+  - { SenderCompID: MUX, Port: 10004, TargetCompID: SINK4 }
+  - { SenderCompID: MUX, Port: 10005, TargetCompID: SINK5 }
+  - { SenderCompID: MUX, Port: 10006, TargetCompID: SINK6 }
+manhole:
+  listenPort: 4223
+  passwords: { admin : aaa }
+webServer:
+  listenPort: 8101
+nevow:
+  listenPort: 8102
+
+
+

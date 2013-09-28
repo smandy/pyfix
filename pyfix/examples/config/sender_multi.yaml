@@ -1,0 +1,61 @@
+default: {ConnectionType: initiator,
+          HeartbeatInterval: 30, 
+          PersistRoot: ../persist/send ,
+          Host: localhost,
+          ConnectionType : initiator}
+sessions:
+  - { BeginString: FIX.4.2, SenderCompID: ACME, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME01, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME02, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME03, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME04, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME05, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME06, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME07, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME08, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME09, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME10, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME11, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME12, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME13, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME14, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME15, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME16, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME17, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME18, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME19, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME20, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME21, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME22, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME23, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME24, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME25, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME26, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME27, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME28, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME29, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME30, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME31, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME32, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME33, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME34, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME35, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME36, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME37, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME38, Port: 1666, TargetCompID: BROKER }
+  - { BeginString: FIX.4.2, SenderCompID: ACME39, Port: 1666, TargetCompID: BROKER }
+manhole:
+  listenPort: 2223
+  passwords: { admin : aaa }
+ftpServer:
+  passwords: { admin : aaa }
+webServer:
+  listenPort: 8001
+nevow:
+  listenPort: 8002
+
+  
+
+
+
+
