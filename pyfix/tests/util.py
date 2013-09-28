@@ -35,13 +35,13 @@ def compileMessageNoPersist(self,
     msg.headerFields = header
     msg.footerFields = footer
 
-    bl = msg.calcBodyLength( mutate = True)
-    cs = msg.calcCheckSum( mutate = True )
+    bl = msg.calc_body_length( mutate = True)
+    cs = msg.calc_check_sum( mutate = True )
     
     #if not disableValidation:
     #    msg.validate()
 
-    ret = msg.toFix()
+    ret = msg.to_fix()
 
     # Persisting a message with a bad sequence number is bad news.
     # so many things go wrong with it!
@@ -80,13 +80,13 @@ def compileMessageOmitSequenceNumber(self,
     msg.headerFields = header
     msg.footerFields = footer
 
-    bl = msg.calcBodyLength( mutate = True)
-    cs = msg.calcCheckSum( mutate = True )
+    bl = msg.calc_body_length( mutate = True)
+    cs = msg.calc_check_sum( mutate = True )
     
     #if not disableValidation:
     #    msg.validate()
 
-    ret = msg.toFix()
+    ret = msg.to_fix()
 
     # Persisting a message with a bad sequence number is bad news.
     # so many things go wrong with it!
@@ -125,13 +125,13 @@ def compileMessageOmitMandatoryHeaderField(self,
     msg.headerFields = header
     msg.footerFields = footer
 
-    bl = msg.calcBodyLength( mutate = True)
-    cs = msg.calcCheckSum( mutate = True )
+    bl = msg.calc_body_length( mutate = True)
+    cs = msg.calc_check_sum( mutate = True )
 
     if not disableValidation:
         msg.validate()
 
-    ret = msg.toFix()
+    ret = msg.to_fix()
     if not possDup:
         #self.persister.persistOutMsg( self.outMsgSeqNum, ret )
         #self.outDb[self.outMsgSeqNum] = ret

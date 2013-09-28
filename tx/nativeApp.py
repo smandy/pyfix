@@ -21,7 +21,7 @@ from twisted.protocols.ftp import FTPFactory, FTPRealm
 from phroms.marketdata.MDClient import MDClient
 from twisted.cred.checkers import AllowAnonymousAccess
 from phroms.core.RecoveryManager import RecoveryManager
-from pyfix.FIXSpec      import parseSpecification
+from pyfix.FIXSpec      import parse_specification
 from phroms.tx.NativeBridge import NativeBridge, NativeConverter
 
 from twisted.cred import portal, checkers
@@ -56,7 +56,7 @@ if __name__=='__main__':
     #fixApplication      = QuickFixTwistedBridge( cfg['initiators'] )
     #frontEndApplication = QuickFixTwistedBridge( cfg['acceptors'] )
 
-    fixSpec = parseSpecification( "FIX.4.2" )
+    fixSpec = parse_specification( "FIX.4.2" )
     fixApplication      = NativeBridge( NativeConfig( cfg['initiators'] ) )
     frontEndApplication = NativeBridge( NativeConfig( cfg['acceptors']  ) )
 

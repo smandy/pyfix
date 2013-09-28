@@ -1,5 +1,7 @@
-from Discovery import Discoverable, getConch
 from twisted.internet import reactor
+
+from pyfix.alladin.Discovery import Discoverable, getConch
+
 
 if __name__=='__main__':
     for i in range(20):

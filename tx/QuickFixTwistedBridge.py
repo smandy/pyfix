@@ -28,7 +28,7 @@ class DeferringApplication( fix.Application ):
 
     def onLogout( self, sessionID ):
         self.checkObj()
-        reactor.callFromThread( self.obj.onLogout, sessionID)
+        reactor.callFromThread( self.obj.on_logout, sessionID)
 
     def toAdmin(self, message, sessionID):
         pass
@@ -205,17 +205,17 @@ class QuickFixTwistedBridge(object):
     def fromAdmin(self, sessionID, message):
         print "noddy fromAdmin : %s %s" % (message,sessionID)
         ts = fix.SendingTime()
-        message.getHeader().getField(ts)
+        message.getHeader().get_field(ts)
         print "TIMESTAMP IS %s" % ts.getValue()
         msgType =fix.MsgType()
-        message.getHeader().getField( msgType )
+        message.getHeader().get_field( msgType )
         if msgType.getValue()==fix.MsgType_Reject:
             print "REJECT : %s" % message
         else:
             print "Message type is %s" % msgType.getValue()
 
     def getMsgType(self, message):
-        return message.getHeader().getField( fix.MsgType() ).getString()
+        return message.getHeader().get_field( fix.MsgType() ).getString()
         
     def toApp(self, sessionID, message):
         pass

@@ -11,20 +11,20 @@ import sys
 import traceback
 
 fix = dataSource.fix
-columnGetters = [ ( lambda x: x.getHeaderFieldValue,  fix.SenderCompID )  ,
-                  ( lambda x: x.getHeaderFieldValue,  fix.TargetCompID ),
-                  ( lambda x: x.getHeaderFieldValue,  fix.MsgSeqNum   ),
+columnGetters = [ ( lambda x: x.get_header_field_value,  fix.SenderCompID )  ,
+                  ( lambda x: x.get_header_field_value,  fix.TargetCompID ),
+                  ( lambda x: x.get_header_field_value,  fix.MsgSeqNum   ),
                    #Below is a Bit of a kludge but all we want is message name so we introduce 'fake' indirection
                   ( lambda x: lambda y: x.MessageName , fix.MsgSeqNum   ),
-                  ( lambda x: x.getFieldValue,        fix.ExecTransType   ),
-                  ( lambda x: x.getFieldValue,        fix.Side        ),
-                  ( lambda x: x.getFieldValue,        fix.Symbol      ),
-                  ( lambda x: x.getFieldValue,        fix.LastShares  ),
-                  ( lambda x: x.getHeaderFieldValue,  fix.SendingTime ),
-                  ( lambda x: x.getFieldValue,        fix.ExecID      ),
-                  ( lambda x: x.getFieldValue,        fix.OrderID     ),
-                  ( lambda x: x.getFieldValue,        fix.ClOrdID     ),
-                  ( lambda x: x.getFieldValue,        fix.LastPx      ) ]
+                  ( lambda x: x.get_field_value,        fix.ExecTransType   ),
+                  ( lambda x: x.get_field_value,        fix.Side        ),
+                  ( lambda x: x.get_field_value,        fix.Symbol      ),
+                  ( lambda x: x.get_field_value,        fix.LastShares  ),
+                  ( lambda x: x.get_header_field_value,  fix.SendingTime ),
+                  ( lambda x: x.get_field_value,        fix.ExecID      ),
+                  ( lambda x: x.get_field_value,        fix.OrderID     ),
+                  ( lambda x: x.get_field_value,        fix.ClOrdID     ),
+                  ( lambda x: x.get_field_value,        fix.LastPx      ) ]
 # begin wxGlade: extracode
 # end wxGlade
 
@@ -55,7 +55,7 @@ class FIXFieldValueList( wx.ListCtrl ):
         ic = self.GetItemCount()
         for i,field in enumerate(allFields):
             if i>=ic:
-                idx = self.InsertStringItem( sys.maxint, msg.toFix() )
+                idx = self.InsertStringItem( sys.maxint, msg.to_fix() )
             self.SetStringItem(idx, 0, str(field.FieldName))
             self.SetStringItem(idx, 1, str( field.Tag) )
             self.SetStringItem(idx, 2, str(field.value) )
@@ -85,7 +85,7 @@ class ListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
         self.itemDataMap = {}
         for msg in dataSource.get( 1000, filterKlazz = [ fix.ExecutionReport ] ):
             #msg.dump()
-            idx = self.list_ctrl_1.InsertStringItem( sys.maxint, msg.toFix() )
+            idx = self.list_ctrl_1.InsertStringItem( sys.maxint, msg.to_fix() )
             for i, g_f in enumerate(columnGetters):
                 getter, field = g_f
                 val = str( getter( msg )(field) )
@@ -96,7 +96,7 @@ class ListCtrlPanel(wx.Panel, listmix.ColumnSorterMixin):
                 #print field
                 try:
                     #print "Entering..."
-                    side = msg.getField( fix.Side)
+                    side = msg.get_field( fix.Side)
                     #print side
                     if side==fix.Side.BUY:
                         self.list_ctrl_1.SetItemBackgroundColour( idx, wx.BLUE )

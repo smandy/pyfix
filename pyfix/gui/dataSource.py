@@ -3,9 +3,9 @@ fileRoot = "/Users/andy/dev/python/phroms/examples/multiplexer/persist/mux"
 from datetime import datetime
 from pyfix.BerkeleyPersister import BerkeleyPersister
 from pyfix.FIXParser import  SynchronousParser
-from pyfix.FIXSpec import parseSpecification
+from pyfix.FIXSpec import parse_specification
 
-fix = parseSpecification('FIX.4.2')
+fix = parse_specification('FIX.4.2')
 
 def get( maxn = None, filterKlazz = None):
     bp = BerkeleyPersister( fileRoot , "MUX","SOURCE1", dt = datetime( 2009,2,24) )

@@ -17,7 +17,7 @@ class MyApplication:
         #session = random.choice( self.ap.sessionsById.keys())
 
         if not order:
-            order = self.og.toFix(self.og.makeOrder())
+            order = self.og.to_fix(self.og.makeOrder())
         #pyfix.Session.sendToTarget( order, session)
         #session.send( order ) 
         #print "queueing order to %s" % str(details)

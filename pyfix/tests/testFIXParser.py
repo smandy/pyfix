@@ -1,5 +1,5 @@
 from pyfix.BerkeleyPersister import BerkeleyPersister
-from pyfix.FIXSpec           import parseSpecification
+from pyfix.FIXSpec           import parse_specification
 from pyfix.FIXParser         import FIXParser
 
 import os.path
@@ -16,7 +16,7 @@ class Concat:
 
     def onMsg(self,  x , data):
         self.messages += 1
-        self.buf += x.toFix()
+        self.buf += x.to_fix()
         x.validate()
 
     def onDiscard(self, x):
@@ -34,7 +34,7 @@ class DoFp( unittest.TestCase ):
                 break
         print fp
         self.bp = BerkeleyPersister( fp, "SENDER","PHROMS", dt = datetime( 2009, 1, 11) )
-        self.spec = parseSpecification(version = "FIX.4.2")
+        self.spec = parse_specification(version = "FIX.4.2")
         (self.inDb,self.outDb) = self.bp.getTodayPersister( )
         # data can arrive in arbitrary shapes and sizes so need
         # to ensure that a parser can cope with all the data ( even byte-at-a-time)
@@ -95,7 +95,7 @@ class DoFp( unittest.TestCase ):
         for i in range(0, len(self.megaString), 10):
             cat = Concat()
             fp = FIXParser(self.spec, cb = cat.onMsg,
-                           onDiscard = cat.onDiscard)
+                           on_discard= cat.onDiscard)
             s = self.megaString[i:]
             fp.feed(s)
             check =len(cat.buf) +fp.checksum() + len(cat.discardBuffer)  
@@ -108,7 +108,7 @@ class DoFp( unittest.TestCase ):
         for i in range(0, len(self.megaString), 10):
             cat = Concat()
             fp = FIXParser(self.spec, cb = cat.onMsg,
-                           onDiscard = cat.onDiscard)
+                           on_discard= cat.onDiscard)
             s = self.megaString[:i]
             fp.feed(s)
             check =len(cat.buf) +fp.checksum() + len(cat.discardBuffer)  

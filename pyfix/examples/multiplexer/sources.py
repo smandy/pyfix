@@ -1,7 +1,7 @@
 import yaml
 
 from pyfix.FIXProtocol import SessionManager, FIXApplication, NormalMessageProcessing
-from pyfix.FIXSpec import parseSpecification
+from pyfix.FIXSpec import parse_specification
 from pyfix.FIXConfig import makeConfig
 from pyfix.FIXPerspective import FIXPerspective
 
@@ -10,7 +10,7 @@ from twisted.internet import reactor
 from pyfix.util.randomOrders import makeOrder
 import random
 
-fix = parseSpecification("FIX.4.2")
+fix = parse_specification("FIX.4.2")
 
 
 class OrderSource(FIXApplication):
@@ -34,15 +34,15 @@ class OrderSource(FIXApplication):
         if self.state.__class__ == NormalMessageProcessing:
             f = fix
             my_order = makeOrder(fix, prefix=self.sender_comp_id)
-            str_msg = self.session.compileMessage(my_order)
-            msg_seq_num = my_order.getHeaderFieldValue(f.MsgSeqNum)
+            str_msg = self.session.compile_message(my_order)
+            msg_seq_num = my_order.get_header_field_value(f.MsgSeqNum)
             print "%s>> %s %s %s" % (self.senderCompID, msg_seq_num, my_order, str_msg)
             self.protocol.transport.write(str_msg)
         self.schedule_order_send()
 
     def on_execution(self, ign1, msg, ign2, ign3):
         #print "Got an execign1tion !"
-        ClOrdID = msg.getFieldValue(self.fix.ClOrdID)
+        ClOrdID = msg.get_field_value(self.fix.ClOrdID)
         if not ClOrdID.startswith(self.sender_comp_id):
             print "ERROR !!! Unexpected execution"
             #msg.dump()

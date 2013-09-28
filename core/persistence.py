@@ -135,7 +135,7 @@ class CsvPersister:
         return str(self.getField())
 
     def getField(self):
-        return self.objectStream.getField()
+        return self.objectStream.get_field()
 
     def readInt(self):
         return int(self.getField() )

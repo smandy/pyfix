@@ -16,7 +16,7 @@ if __name__=='__main__':
     ts = TestSpooler( StringIO( objectStream) )
 
     while True:
-        x = ts.getField()
+        x = ts.get_field()
         print x
         if not x:
             break

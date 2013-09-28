@@ -1,6 +1,6 @@
 
 from pyfix.FIXProtocol import SessionManager, AcceptorFIXProtocol, InitiatorFIXProtocol
-from pyfix.FIXSpec       import parseSpecification
+from pyfix.FIXSpec       import parse_specification
 import yaml
 import unittest
 
@@ -48,7 +48,7 @@ class SessionTester( unittest.TestCase):
         
 
 config = yaml.load( open('../config/receiver.yaml','r') )
-fix        = parseSpecification( version= "FIX.4.2" )
+fix        = parse_specification( version= "FIX.4.2" )
 
 if __name__=='__main__':
     unittest.main(defaultTest='test_suite' )

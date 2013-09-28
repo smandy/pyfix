@@ -2,11 +2,11 @@ import yaml
 from twisted.internet import reactor
 
 from pyfix.FIXProtocol import SessionManager, NormalMessageProcessing
-from pyfix.FIXSpec import parseSpecification
+from pyfix.FIXSpec import parse_specification
 from pyfix.FIXConfig import makeConfig
 from pyfix.FIXApplication import FIXApplication
 
-fix = parseSpecification( "FIX.4.2" )
+fix = parse_specification( "FIX.4.2" )
 
 from pyfix.util import randomOrders
 
@@ -20,14 +20,14 @@ class Sender(FIXApplication):
             fix.ExecutionReport : self.onExecution,
             fix.Heartbeat : beep
             }
-        self.recoveryDict = {
+        self.recovery_dict = {
             fix.ExecutionReport : self.onRecoveredExecution,
             fix.Heartbeat       : self.noop,
             fix.Logon           : self.noop,
             fix.OrderSingle  : self.onRecoveredNewOrderSingle,
             }
     
-    def set_state(self, oldState, newState):
+    def set_state(self, old_state, newState):
         self.state = newState
         if newState.__class__==NormalMessageProcessing:
             assert self.protocol is not None
@@ -35,8 +35,8 @@ class Sender(FIXApplication):
 
     def sendOrder(self):
         myOrder = randomOrders.makeOrder( fix)
-        strMsg = self.session.compileMessage( myOrder )
-        msgSeqNum = myOrder.getHeaderFieldValue( fix.MsgSeqNum)
+        strMsg = self.session.compile_message( myOrder )
+        msgSeqNum = myOrder.get_header_field_value( fix.MsgSeqNum)
         print "APP>> %s %s %s" % (msgSeqNum, myOrder, strMsg)
         self.protocol.transport.write( strMsg )
 

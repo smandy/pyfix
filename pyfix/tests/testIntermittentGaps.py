@@ -70,7 +70,7 @@ class IntermittentGap( SessionTester ):
         s = "DoOrder seq=%s" % self.initiatorSession.outMsgSeqNum
         print s,
         myOrder = randomOrders.makeOrder(fix)
-        fixMsg = self.initiatorSession.compileMessage( myOrder, persist = self.shouldPersist(counter) )
+        fixMsg = self.initiatorSession.compile_message( myOrder, persist = self.shouldPersist(counter) )
         if self.shouldSend(counter):
             self.initiatorSession.protocol.transport.write(fixMsg)
             print "...sent"

@@ -36,7 +36,7 @@ class DeferringApplication(fix.Application):
         self.persister = persister
 
     def getMsgType(self, message):
-        return message.getHeader().getField( self.msgType).getString()
+        return message.getHeader().get_field( self.msgType).getString()
 
     def onOrder(self, message, sessionID):
         # Need to have these gubbins wrappers since we can't process order/executino
@@ -64,7 +64,7 @@ class DeferringApplication(fix.Application):
 
     def onLogout( self, sessionID ):
         if self.obj:
-            reactor.callFromThread( self.obj.onLogout, sessionID)
+            reactor.callFromThread( self.obj.on_logout, sessionID)
 
     def toAdmin(self, message, sessionID):
         print "toAdmin"
