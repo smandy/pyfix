@@ -1,10 +1,10 @@
-
-from FIXParser import SynchronousParser
-from BerkeleyPersister import BerkeleyPersister
 from datetime import datetime
 import time
 
+from FIXParser import SynchronousParser
 from FIXSpec import  parse_specification
+from pyfix.persistence import BerkeleyPersister
+
 fixSpec    = parse_specification( version= "FIX.4.2" )
 
 fr = "/Users/andy/persist/send"

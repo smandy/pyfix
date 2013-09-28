@@ -1,7 +1,8 @@
+from pyfix.persistence import BerkeleyPersister
+
 fileRoot = "/Users/andy/dev/python/phroms/examples/multiplexer/persist/mux"
 
 from datetime import datetime
-from pyfix.BerkeleyPersister import BerkeleyPersister
 from pyfix.FIXParser import  SynchronousParser
 from pyfix.FIXSpec import parse_specification
 

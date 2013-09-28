@@ -1,12 +1,14 @@
-from pyfix.BerkeleyPersister import BerkeleyPersister
-from pyfix.FIXSpec           import parse_specification
-from pyfix.FIXParser         import FIXParser
-
 import os.path
 import unittest
 
+from pyfix.FIXSpec           import parse_specification
+from pyfix.FIXParser         import FIXParser
+
+
 
 # Another Noddy Change
+from pyfix.persistence import BerkeleyPersister
+
 
 class Concat:
     def __init__(self):

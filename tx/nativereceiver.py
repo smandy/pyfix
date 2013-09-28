@@ -1,6 +1,7 @@
 from pyfix.FIXProtocol       import AcceptorSession, FIXProtocol
-from pyfix.BerkeleyPersister import BerkeleyPersister
 from pyfix.FIXSpec           import parse_specification
+from pyfix.persistence import BerkeleyPersister
+
 
 class FlippingProtocol(FIXProtocol):
     def __init__(self, *args, **kwargs):
