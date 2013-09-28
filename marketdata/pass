@@ -1,0 +1,27 @@
+from twisted.spread   import pb
+from twisted.internet import reactor
+
+from config import MDHOST, MDPORT
+
+class MDClient( pb.Referenceable ):
+    def __init__(self):
+        self.factory = pb.PBClientFactory()
+        
+    def getConnected(self):
+        reactor.connectTCP( MDHOST, MDPORT, self.factory)
+        self.factory.getRootObject().addCallback(self.connected)
+
+    def connected( self, rootObj):
+        self.root = rootObj
+        self.root.callRemote( 'hello').addCallback( self.handshakeComplete)
+
+    def handshakeComplete(self, *args):
+        print "Handshake complete %s" % str(args)
+
+if __name__=='__main__':
+    client = MDClient()
+    client.getConnected()
+    reactor.run()
+    
+
+

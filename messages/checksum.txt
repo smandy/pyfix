@@ -1,0 +1,22 @@
+ The integrity of message data content can be verified in two ways: verification of message length and a simple 
+checksum of characters. 
+ 
+ The message length is indicated in the BodyLength field and is verified by counting the number of characters in 
+the message following the BodyLength field up to, and including, the delimiter immediately preceding the 
+CheckSum tag (“10=”). 
+ 
+ The CheckSum integrity check is calculated by summing the binary value of each character from the “8” of “8=“ 
+up to and including the <SOH> character immediately preceding the CheckSum tag field and comparing the 
+least significant eight bits of the calculated value to the CheckSum value (see “CheckSum Calculation” 
+for a complete description). 
+ 
+ char*GenerateCheckSum(char*buf,longbufLen) 
+ { 
+ staticchartmpBuf[4]; 
+ longidx; 
+ unsignedintcks; 
+ 
+ for(idx=0L,cks=0;idx<bufLen;cks+=(unsignedint)buf[idx++]); 
+ sprintf(tmpBuf,“%03d”,(unsignedint)(cks%256)); 
+ return(tmpBuf); 
+ }

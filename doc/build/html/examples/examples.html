@@ -1,0 +1,198 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Code Examples &mdash; pyfix 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="pyfix 0.0.1 documentation" href="../index.html" />
+    <link rel="next" title="Tests" href="../tests.html" />
+    <link rel="prev" title="Interactive Use" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../tests.html" title="Tests"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Interactive Use"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">pyfix 0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="code-examples">
+<span id="tut-examples"></span><h1>Code Examples<a class="headerlink" href="#code-examples" title="Permalink to this headline">¶</a></h1>
+<p>The following code examples live under the &#8216;examples&#8217; directory.</p>
+<div class="section" id="config">
+<h2>Config<a class="headerlink" href="#config" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>The main examples are all configured with <cite>yaml</cite> files. A number of recent projects have been using single ( or few ) yaml files as a means of app configuration, as opposed to the traditional multi-XML file approach. ( Ruby on Rails, Google AppEngine ).</p>
+<p>Below is an example &#8216;acceptor&#8217; config, with additional config sections for the manhole ( ssh interactive interpreter), and web listen ports used by other examples.</p>
+<p>This configuration sets up 4 listening sessions:</p>
+<div class="highlight-python"><pre>default: {ConnectionType: acceptor,
+          FileStorePath: store,
+          HeartbeatInterval: 30,
+          PersistRoot: ../persist/receive,
+          BeginString: FIX.4.2
+          }
+sessions:
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME1 }
+  - { SenderCompID: BROKER, Port: 1667, TargetCompID: ACME2 }
+  - { SenderCompID: BROKER, Port: 1668, TargetCompID: ACME3 }
+  - { SenderCompID: BROKER, Port: 1669, TargetCompID: ACME4 }
+manhole:
+  listenPort: 4223
+  passwords: { admin : aaa }
+webServer:
+  listenPort: 8101
+nevow:
+  listenPort: 8102</pre>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="simpleordersend">
+<h2>SimpleOrderSend<a class="headerlink" href="#simpleordersend" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>Simple example showing session creation and simple order submission reception.
+Example is in two parts, sender and receiver. The order in which they are started is not particularly important as the sender will continually attempt to reconnect if it does not succeed. The sender submits one order once it&#8217;s logged in.</div></blockquote>
+</div>
+<div class="section" id="simpleordersend-manhole">
+<h2>SimpleOrderSend_manhole<a class="headerlink" href="#simpleordersend-manhole" title="Permalink to this headline">¶</a></h2>
+<p>A variant on the order sender, but also opens up a listening ssh port on both the sender and receiver applications so that a user can log on to the session and inspect/modify session state using the interactive python interpreter.</p>
+</div>
+<div class="section" id="multiplexer">
+<h2>Multiplexer<a class="headerlink" href="#multiplexer" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>A slightly more involved application showing use of the FIX Application objects   and simple order routing. The example consists of three applications.</div></blockquote>
+<ol class="arabic">
+<li><p class="first">Sinks</p>
+<p>The Sinks receive orders and simply fill each incoming order. The sinks.py      application startes up multiple FIX Sessions listening on multiple ports, each of      which will fill the orders sent to it.</p>
+</li>
+<li><p class="first">Sources</p>
+<p>The source.py application creates multiple initiating sessions. Each one begins      sending orders once it has logged in.</p>
+</li>
+<li><p class="first">MUX</p>
+<p>The mux is the main point of the example. It accepts connections from the sources, and in turn initiates sessions to the sinks. It routes each incoming order depending on RIC extension to one of the sinks. ( i.e. each sink can be taken to represent a particular market). When fills return from the sink, they are         re-routed back to the appropriate source.</p>
+<p>The example is unrealistic in the sense that source order IDs are being used to route fills back to the appropriate source which in reality could never be assumed, but it serves as a good proof-of-principle.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="mux-gui">
+<h2>Mux Gui<a class="headerlink" href="#mux-gui" title="Permalink to this headline">¶</a></h2>
+<p>The multiplexer, source and sink are also configured to make their respective session managers available for connection via the twisted PB protocol.</p>
+<p><em>Choosing A SessionManager to Connect To</em></p>
+<img alt="../_images/muxGui1.jpg" src="../_images/muxGui1.jpg" />
+<p>When the muxGui starts up it broadcasts a multicast packet requesting any listening sessionmanagers to respond with the host and port over which a pb connection can be initiated to interact with the session manager.</p>
+<p>Once connected, the gui displays the current status of each session covered by the session manager.
+In this case, the MUX-SINKXX entries show that all sessions initiated by the multiplexer are currently connected, and the MUX-SOURCEXX enties show that the incoming sessions are all connected as well. The Blue and red fields show the last order and execution message to have passed through the SessionManager.</p>
+<p><em>The MUX SessionManager showing connected Sessions and Last Messages</em></p>
+<img alt="../_images/muxGui2.jpg" src="../_images/muxGui2.jpg" />
+</div>
+<div class="section" id="timetrial">
+<h2>TimeTrial<a class="headerlink" href="#timetrial" title="Permalink to this headline">¶</a></h2>
+<p>An application which should give an indication of realistic performance limits of the system.</p>
+<p>This app &#8216;abused&#8217; the FIX test request by spamming a receiving app with test requests, the id of which contains a pickle of the sending time, and current message frequency when the test requets is send. The sending application makes a note of the arrival time of each request, and the optimal freuency that occurs. On the test hardware used the system scales linearly up to approximately 100 msgs per second, at which point any attempts to send faster result in the system backing up.</p>
+<p>It&#8217;s important to note what exactly this figure represents. It is a steady state message rate ( not burst rate), and when a frequency of 100 is states, it means that the system can send a message, haev another engine process the test request, reply, and have the sending app receive the reply.</p>
+<img alt="../_images/timetrial.png" src="../_images/timetrial.png" />
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Code Examples</a><ul>
+<li><a class="reference internal" href="#config">Config</a></li>
+<li><a class="reference internal" href="#simpleordersend">SimpleOrderSend</a></li>
+<li><a class="reference internal" href="#simpleordersend-manhole">SimpleOrderSend_manhole</a></li>
+<li><a class="reference internal" href="#multiplexer">Multiplexer</a></li>
+<li><a class="reference internal" href="#mux-gui">Mux Gui</a></li>
+<li><a class="reference internal" href="#timetrial">TimeTrial</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Interactive Use</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../tests.html"
+                        title="next chapter">Tests</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/examples/examples.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../tests.html" title="Tests"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Interactive Use"
+             >previous</a> |</li>
+        <li><a href="../index.html">pyfix 0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2009, Andy Smith.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

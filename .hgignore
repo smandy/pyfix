@@ -1,0 +1,3 @@
+glob: *.db
+glob:*.db
+glob:dependencies/**

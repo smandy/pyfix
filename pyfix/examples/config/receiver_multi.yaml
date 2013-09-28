@@ -1,0 +1,57 @@
+default: {ConnectionType: acceptor,
+          FileStorePath: store,
+          HeartbeatInterval: 30, 
+          PersistRoot: ../persist/receive, 
+          BeginString: FIX.4.2
+          }
+sessions:
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME01 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME02 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME03 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME04 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME05 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME06 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME07 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME08 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME09 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME10 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME11 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME12 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME13 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME14 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME15 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME16 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME17 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME18 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME19 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME20 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME21 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME22 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME23 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME24 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME25 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME26 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME27 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME28 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME29 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME30 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME31 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME32 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME33 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME34 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME35 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME36 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME37 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME38 }
+  - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME39 }
+manhole:
+  listenPort: 4223
+  passwords: { admin : aaa }
+webServer:
+  listenPort: 8101
+nevow:
+  listenPort: 8102
+
+
+

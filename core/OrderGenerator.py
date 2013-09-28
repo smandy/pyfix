@@ -1,0 +1,64 @@
+# $Header: /Users/andy/cvs/dev/python/phroms/core/OrderGenerator.py,v 1.7 2009-01-09 16:27:50 andy Exp $
+
+import random
+from   datetime import datetime
+from   phroms.messages.Order import  Order
+from phroms.messages.enum import Side
+
+from phroms.core.AccountManager  import AccountManager
+from phroms.core.SecurityManager import SecurityManager
+
+class OrderGenerator:
+    def __init__(self, prefix="TEST"):
+        self.idBase = 0
+        self.dt = datetime.now().strftime("%Y%m%d")
+        self.prefix = prefix
+        self.sideChoices   = [ Side.BUY, Side.SELL ]
+        self.accountManager  = AccountManager()
+        self.securityManager = SecurityManager()
+
+    def orderWasDone(self, clOrdID):
+        # persistence tells us about orders already done
+        oldIdBase = int( clOrdID.split('_')[1])
+        self.idBase = oldIdBase+1
+
+    def onInit(self):
+        print "OrderGenerator.onInit()"
+        self.accountChoices  = self.accountManager.items
+        self.brokerChoices   = self.brokerManager.items
+        self.securityChoices = self.securityManager.items
+
+    def setAccountManager(self, am):
+        self.accountManager = am
+
+    def setBrokerManager(self, bm):
+        self.brokerManager = bm
+
+    def setSecurityManager(self, sm):
+        self.securityManager = sm
+
+    def setClOrdIDGen(self, clOrdIDGen):
+        self.clOrdIDGen = clOrdIDGen
+
+    def makeOrder(self):
+        #security = random.choice( self.securityChoices)
+        side     = random.choice( self.sideChoices)
+        qty      = 100
+        px       = 100
+        security = random.choice( self.securityChoices)
+        clOrdID = self.clOrdIDGen.makeClOrdID()
+        account = random.choice( self.accountChoices)
+        broker = random.choice(self.brokerChoices)
+        o = Order( clOrdID, security, qty, side, account, broker, px)
+        return o
+
+if __name__=='__main__':
+    #print makeOrder()
+    og = OrderGenerator()
+    for i in range(100):
+        #print og.makeClOrdID()
+        o = og.makeOrder()
+        print og.toFix( o)
+
+
+

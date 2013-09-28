@@ -1,0 +1,27 @@
+default: {ConnectionType: initiator,
+          HeartbeatInterval: 30, 
+          PersistRoot: ./persist/sinks ,
+          Host: localhost,
+          ConnectionType : acceptor}
+sessions:
+  - { BeginString: FIX.4.2, SenderCompID: SINK1, Port: 10001, TargetCompID: MUX }
+  - { BeginString: FIX.4.2, SenderCompID: SINK2, Port: 10002, TargetCompID: MUX }
+  - { BeginString: FIX.4.2, SenderCompID: SINK3, Port: 10003, TargetCompID: MUX }
+  - { BeginString: FIX.4.2, SenderCompID: SINK4, Port: 10004, TargetCompID: MUX }
+  - { BeginString: FIX.4.2, SenderCompID: SINK5, Port: 10005, TargetCompID: MUX }
+  - { BeginString: FIX.4.2, SenderCompID: SINK6, Port: 10006, TargetCompID: MUX }
+manhole:
+  listenPort: 2225
+  passwords: { admin : aaa }
+ftpServer:
+  passwords: { admin : aaa }
+webServer:
+  listenPort: 8001
+nevow:
+  listenPort: 8002
+
+  
+
+
+
+
