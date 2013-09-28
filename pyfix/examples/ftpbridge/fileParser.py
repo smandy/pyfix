@@ -7,10 +7,11 @@ class FileFormatException(Exception):
 
 
 class FileParser(object):
-    fileFormat = [('Side', lambda x: {
+    fileFormat = [
+    ('Side', lambda x: {
     'B': fix.Side.BUY,
     'S': fix.Side.SELL}[x] ),
-    ('Qty', lambda x: fix.OrderQty(int(x)) ),
+    ('Qty'   , lambda x: fix.OrderQty(int(x)) ),
     ('Symbol', lambda x: fix.Symbol(x) )]
 
     def parse(self, data):

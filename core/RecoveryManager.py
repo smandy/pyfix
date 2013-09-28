@@ -21,7 +21,7 @@ class RecoveryManager(object):
     def setOrderManager(self, orderManager):
         self.orderManager = orderManager
         self.recoveryMap[ Order ]     = self.orderManager.onRecoveredOrder
-        self.recoveryMap[ Execution ] = self.orderManager.onExecution
+        self.recoveryMap[ Execution ] = self.orderManager.on_execution
 
     def setPersister(self, p):
         self.persister = p

@@ -206,7 +206,7 @@ class NormalMessageProcessing(FIXState):
             spssp = self.protocol.session.sessionManager.perspective
             if spssp:
                 if msg.__class__ == self.fix.ExecutionReport:
-                    spssp.onExecution(self.protocol, msg)
+                    spssp.on_execution(self.protocol, msg)
                 elif msg.__class__ == self.fix.OrderSingle:
                     spssp.on_order(self.protocol, msg)
 
