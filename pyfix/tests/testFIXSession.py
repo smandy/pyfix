@@ -3,12 +3,12 @@ import tempfile
 import os, shutil
 
 from twisted.internet import reactor
-from pyfix.FIXProtocol import SessionManager
 from pyfix.FIXSpec     import parse_specification
 from pyfix.FIXConfig import SessionConfig
 from pyfix.FIXProtocol import InitiatorAwaitingLogon, AcceptorAwaitingLogon, \
      NormalMessageProcessing, AwaitingLogout, LoggedOut, GapProcessing
 from pyfix.FIXApplication import FIXApplication
+from pyfix.SessionFactory import SessionManager
 from pyfix.util.randomOrders import makeOrder
 
 fix = parse_specification( version= "FIX.4.2" )
