@@ -4,6 +4,7 @@ from twisted.internet.protocol import ReconnectingClientFactory, Factory
 
 class AcceptorFactory(Factory):
     initiator = False
+
     def __init__(self, sm, sessions):
         self.sm = sm
         self.sessions = sessions

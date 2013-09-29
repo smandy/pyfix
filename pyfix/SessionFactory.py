@@ -4,7 +4,7 @@ from collections import defaultdict
 from twisted.internet import reactor
 from pyfix.FIXParser import SynchronousParser
 from pyfix.FIXProtocol import InitiatorFIXProtocol, FIXProtocol, AcceptorFIXProtocol
-from pyfix.Factories import AcceptorFactory, SessionExistsException, InitiatorFactory
+from pyfix.ProtocolFactories import AcceptorFactory, SessionExistsException, InitiatorFactory
 from pyfix.Session import Session
 
 class SessionManager(object):

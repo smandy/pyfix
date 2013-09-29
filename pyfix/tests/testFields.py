@@ -29,15 +29,15 @@ class FieldTest( unittest.TestCase ):
 shouldPass = [ fix.ClOrdID('wayhey' ),
                fix.OrderQty(100),
                fix.SendingTime( datetime.now() ),
-               fix.ClOrdID( 'wayhey', isNative = False ),
-               fix.OrderQty( '100', isNative = False ),
-               fix.SendingTime("20090212-18:47:18", isNative = False),
+               fix.ClOrdID( 'wayhey', is_native = False ),
+               fix.OrderQty( '100', is_native= False ),
+               fix.SendingTime("20090212-18:47:18", is_native = False),
                fix.LastPx( 23.45 ),
-               fix.LastPx( '23.45', isNative = False),
+               fix.LastPx( '23.45', is_native= False),
                fix.Side('1'),
-               fix.Side('1', isNative = False),
-               fix.PossDupFlag( 'Y', isNative = False ),
-               fix.PossDupFlag( 'N', isNative = False ),
+               fix.Side('1', is_native = False),
+               fix.PossDupFlag( 'Y', is_native = False ),
+               fix.PossDupFlag( 'N', is_native = False ),
                ]
 
 shouldFail  = [
@@ -47,11 +47,11 @@ shouldFail  = [
     fix.SendingTime( 23.45),
     fix.SendingTime(None),
     fix.OrderQty('wayhey'),
-    fix.SendingTime( '290212-8:47:18', isNative = False), # i.e. malformed!
-    fix.Side('', isNative = False),
+    fix.SendingTime( '290212-8:47:18', is_native = False), # i.e. malformed!
+    fix.Side('', is_native = False),
     fix.Side('0'),
-    fix.Side('0', isNative = False),
-    fix.PossDupFlag( 'Z', isNative = False),
+    fix.Side('0', is_native = False),
+    fix.PossDupFlag( 'Z', is_native = False)
             ]
 
 

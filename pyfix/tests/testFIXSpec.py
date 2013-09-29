@@ -4,7 +4,6 @@ import unittest
 
 from pyfix.FIXSpec import parse_specification
 from pyfix.FIXParser import SynchronousParser
-from pyfix.FIXProtocol import Session
 import os
 from pyfix.FIXConfig import SessionConfig
 
