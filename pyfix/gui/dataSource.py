@@ -1,4 +1,4 @@
-from pyfix.persistence import BerkeleyPersister
+from pyfix.persistence.BerkeleyPersister import BerkeleyPersister
 
 fileRoot = "/Users/andy/dev/python/phroms/examples/multiplexer/persist/mux"
 
