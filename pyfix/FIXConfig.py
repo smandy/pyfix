@@ -1,4 +1,3 @@
-
 #import quickfix as pyfix
 from pprint import pprint as pp
 
@@ -8,23 +7,7 @@ def make_dictionary(d):
         ret.setString(q, v)
     return( ret )
 
-## def fromYaml(i):
-##     print "Yaml : "
-##     pp(i)
-##     ss = pyfix.SessionSettings()
-##     for chunk in i['sessions']:
-##         sess = i['default'].copy()
-##         sess.update( chunk )
-##         pp(sess)
-##         sid = pyfix.SessionID( sess['BeginString'],
-##                              sess['SenderCompID'],
-##                              sess['TargetCompID'],
-##                              sess.get( 'SessionQualifier', '') )
-##         ss.set(sid, makeDictionary(sess) )
-##     ss.set( makeDictionary( i['default'] ) )
-##     return ss
-
-class SessionConfig(object):
+xlass SessionConfig(object):
     __slots__=['sender','target','persistRoot','heartbeatInterval',
                'host','port','connectionType', 'app', 'd' ]
     def __init__(self,

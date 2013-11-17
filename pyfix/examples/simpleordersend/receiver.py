@@ -5,14 +5,12 @@ from pyfix.FIXSpec import parse_specification
 from pyfix.FIXConfig import makeConfig
 from pyfix.SessionFactory import SessionManager
 
-
 def boop(*args):
     print "Boop"
 
 from pyfix.FIXApplication import FIXApplication
 
 fix = parse_specification(version="FIX.4.2")
-
 
 class Receiver(FIXApplication):
     def __init__(self, f):
@@ -48,7 +46,6 @@ class Receiver(FIXApplication):
             self.protocol.transport.write(message_string)
         else:
             dup = msg.get_header_field_value(f.PossDupFlag, default=False)
-
 
 config = yaml.load(open('../config/receiver.yaml', 'r'))
 

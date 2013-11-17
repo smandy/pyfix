@@ -1,7 +1,6 @@
 from twisted.internet import reactor
 from twisted.internet.protocol import ReconnectingClientFactory, Factory
 
-
 class AcceptorFactory(Factory):
     initiator = False
 
@@ -71,7 +70,6 @@ class InitiatorFactory(ReconnectingClientFactory):
         else:
             ReconnectingClientFactory.clientConnectionFailed(self, connector,
                                                              reason)
-
 
 class SessionExistsException(Exception):
     pass
