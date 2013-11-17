@@ -6,14 +6,10 @@ default: {ConnectionType: acceptor,
           }
 sessions:
   - { SenderCompID: BROKER, Port: 1666, TargetCompID: ACME }
-manhole:
-  listenPort: 4223
+attmanhole:
+  listenPo: 4223
   passwords: { admin : aaa }
 webServer:
   listenPort: 8101
 nevow:
   listenPort: 8102
-
-
-
-t

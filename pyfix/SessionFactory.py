@@ -1,5 +1,3 @@
-# Don't know if this was particularly wise.
-# One sessino manager which manages incoming and outgoing sessions
 from collections import defaultdict
 from twisted.internet import reactor
 from pyfix.FIXParser import SynchronousParser
@@ -9,15 +7,12 @@ from pyfix.Session import Session
 
 class SessionManager(object):
     protocolKlazz = FIXProtocol
-
     def __init__(self,
-                 spec,
+                 fix,
                  config,
                  initiatorProtocol=InitiatorFIXProtocol,
                  acceptorProtocol=AcceptorFIXProtocol):
-    #senderCompID,
-    #targetCompID):
-        self.fix = spec
+        self.fix = fix
         self.config = config
         self.sessionLookup = {}
 
@@ -36,10 +31,9 @@ class SessionManager(object):
         self.sessions = []
 
         self.perspective = None
-
         for s in config:
             idTuple = ( s.sender, s.target )
-            session = Session(self, spec, s)
+            session = Session(self, fix, s)
             self.sessions.append(session)
             self.sessionByTuple[idTuple] = idTuple
             if s.connectionType == 'initiator':
