@@ -9,7 +9,7 @@ fixSpec    = parse_specification( version= "FIX.4.2" )
 
 fr = "/Users/andy/persist/send"
 bp = BerkeleyPersister(fr, dt = datetime( 2009, 1, 13) )
-(inDb,outDb) = bp.getTodayPersister( "SENDER", "PHROMS")
+(inDb,outDb) = bp.getTodayPersister( "SENDER", "PYFIX")
 
 #p = BerkeleyPersister( fileRoot, dt = datetime(2009, 11,1) )
 p = SynchronousParser(fixSpec)
