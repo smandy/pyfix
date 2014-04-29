@@ -4,10 +4,8 @@ from FIXSpec import SOH, BusinessReject
 FIX_PREAMBLE = "8=FIX"
 FIX_PREAMBLE_FIELD_PAIR = FIX_PREAMBLE.partition("=")
 
-
 class ParseException(Exception):
     pass
-
 
 class FIXParser:
     def __init__(self,
