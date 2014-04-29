@@ -3,103 +3,122 @@ from collections import namedtuple
 import os
 import struct
 
-Buffer = namedtuple( 'Buffer', ['dat','idx', 'offset', 'fileIdx'] )
+Buffer = namedtuple('Buffer', ['dat', 'idx'])
+INT_STRUCT = struct.Struct('<i') # Little Endian Int32
+LONG_STRUCT = struct.Struct('<q') # Little Endian Int32
 
-class NumberBuffer:
-    def __init__(self, struct, mm):
-        self.struct = struct
-        self.mm     = mm
-        self.ss = struct.size
 
-    def flush(self):
-        self.mm.flush()
-        
-    def __getitem__(self, n):
-        assert n >= 0, "Negative index %s" % n
-        assert (n+1)*self.ss <= len(self.mm), "Index out of bounds"
-        return self.struct.unpack_from( self.mm, n*self.ss)[0]
-
-    def __setitem__(self, idx, n):
-        #print "Set %s %s" % (idx, n)
-        self.struct.pack_into(self.mm, idx * self.struct.size, n)
-        
 def allocateMmap(fn, sz):
     #print fn
     if not os.path.exists(fn):
         f = open(fn, 'w+')
-        f.seek(sz - 1 )
+        f.seek(sz - 1)
         f.write(' ')
         f.flush()
     else:
         f = open(fn, 'r+')
-    return mmap.mmap(f.fileno(), 0 )
+    return mmap.mmap(f.fileno(), 0)
 
-INT_STRUCT  = struct.Struct('<i') # Little Endian Int32
-LONG_STRUCT = struct.Struct('<q') # Little Endian Int32
 
-def makeBuffer(root, sz, offset, fileIdx):
-    return Buffer( allocateMmap('%s.dat' % root, sz),
-                   NumberBuffer( LONG_STRUCT, allocateMmap('%s.idx' % root, sz * 8) ) ,
-                   offset, fileIdx
-                   )
-class MMAP(object):
-
-    __slots__ = ['bufferSize','root','fileIdx','idx','cache','globalIdx','current','idxWithinBuffer','locWithinBuffer']
-
-    def __init__(self, root, bufferSize, maxBuffers = 10000):
-        self.bufferSize = bufferSize
-        self.root = root
-        self.fileIdx = 0
-        self.idx     = 0
-        self.cache = {}
-
-        self.globalIdx = NumberBuffer( LONG_STRUCT, allocateMmap( "%s_globalindex.dat" % self.root, maxBuffers * 4 )  )
-        self.load()
+class NumberBuffer:
+    def __init__(self, s, mm):
+        self.s = s
+        self.mm = mm
+        self.ss = s.size
+        self.capacity = len(self.mm) / self.s.size
+        print "Capacity = %s" % self.capacity
 
     def flush(self):
-        def flushBuf(x):
-            x.idx.flush()
+        self.mm.flush()
+
+    def __getitem__(self, n):
+        assert n >= 0, "Negative index %s" % n
+        assert (n + 1) * self.ss <= len(self.mm), "Index out of bounds"
+        return self.s.unpack_from(self.mm, n * self.ss)[0]
+
+    def __setitem__(self, idx, n):
+        #print "Set %s %s" % (idx, n)
+        self.s.pack_into(self.mm, idx * self.s.size, n)
+
+    def __len__(self):
+        """Find last nonzero element"""
+        lo = 0
+        hi = self.capacity - 1
+        while lo + 1 < hi:
+            idx = (hi + lo ) / 2
+            #print lo, hi, idx
+            if self[idx] == 0:
+                hi = idx
+            else:
+                lo = idx
+        return hi
+
+
+def dat_for_root(s):
+    return "%s.dat"
+
+
+def idx_for_root(s):
+    return "%s.idx"
+
+
+def make_buffer(root, sz, offset, fileIdx):
+    return Buffer(
+        allocateMmap('%s.dat' % root, sz),
+        NumberBuffer(LONG_STRUCT, allocateMmap(idx_for_root(root), sz * 8))
+    )
+
+
+def root_for_idx(r, idx):
+    return "%s_%05d" % (r, idx)
+
+
+class MMAPPersister(object):
+    __slots__ = ['buf_size', 'root', 'file_idx', 'idx', 'cache', 'current', 'buffer_idx', 'buffer_loc']
+
+    def __init__(self, root, bufferSize, maxBuffers=10000):
+        self.buf_size = bufferSize
+        self.root = root
+        self.file_idx = 0
+        self.idx = 0
+        self.cache = {}
+        self.load()
+        self.buffer_idx = 0
+        self.buffer_loc = 0
+        self.current = None
+
+    def flush(self):
+        def fl(x):
+            x.idx.flus()
             x.dat.flush()
+
         for c in self.cache.values():
-            flushBuf(c)
-        self.globalIdx.flush()
+            fl(c)
 
     def load(self):
         self.idx = 0
-        self.locWithinBuffer = 0
-        self.idxWithinBuffer = 0
+        self.buffer_loc = 0
+        self.buffer_idx = 0
+        pth = root_for_idx(self.root, self.file_idx)
         while True:
-            pth = "%s_%05d" % (self.root, self.fileIdx)
-            #print "Looper", pth
-            self.current = makeBuffer( pth , self.bufferSize, self.idx, self.fileIdx)
-            self.cache[ self.fileIdx ] = self.current
-            #print self.globalIdx[self.fileIdx], self.idx
-            self.idxWithinBuffer  = self.globalIdx[self.current.fileIdx] - self.idx
-            #print "Idx now = ", self.idxWithinBuffer, self.current.idx[self.idxWithinBuffer]
-            if self.idxWithinBuffer==0:
-                self.locWithinBuffer = 0
+            self.current = make_buffer(pth, self.buf_size, self.idx, self.file_idx)
+            self.cache[self.file_idx] = self.current
+            if self.buffer_idx == 0:
+                self.buffer_loc = 0
             else:
-                self.locWithinBuffer  = self.current.idx[self.idxWithinBuffer-1]
-                #print "expect nonzero", self.current.idx[self.idxWithinBuffer - 1], " expect zero = ", self.current.idx[self.idxWithinBuffer]
-
-            while self.current.idx[self.idxWithinBuffer]!=0:
-                self.idxWithinBuffer += 1
-                print "Idx is ", self.idxWithinBuffer
-                
-            self.idx = self.globalIdx[self.fileIdx] + 1
-            self.fileIdx += 1
-            
-            if self.globalIdx[self.fileIdx]==0:
+                self.buffer_loc = self.current.idx[self.buffer_idx - 1]
+            self.file_idx += 1
+            if not os.path.exists(dat_for_root(root_for_idx(self.root, self.file_idx))):
                 break
 
     def allocate(self):
-        pth = "%s_%05d" % (self.root, self.fileIdx)
+        pth = root_for_idx(self.root, self.file_idx)
         print pth
-        self.locWithinBuffer = 0
-        self.idxWithinBuffer = 0
-        self.current = makeBuffer( pth , self.bufferSize, max(self.idx-1 , 0) , self.fileIdx)
-        self.cache[self.fileIdx] = self.current
-        self.fileIdx += 1
+        self.buffer_loc = 0
+        self.buffer_idx = 0
+        self.current = make_buffer(pth, self.buf_size, max(self.idx - 1, 0), self.file_idx)
+        self.cache[self.file_idx] = self.current
+        self.file_idx += 1
 
     def __len__(self):
         return self.findLast()[0]
@@ -118,103 +137,74 @@ class MMAP(object):
 
     def __getitem__(self, n):
         offset, maxIdx = self.findLast()
-        assert n<offset, "Out of bounds"
-        assert n>=0,  "Out of bounds"
+        assert n < offset, "Out of bounds"
+        assert n >= 0, "Out of bounds"
         idx = 0
         offset = 0
-        while idx<maxIdx:
-            newOffset = self.globalIdx[idx]
-            if n <= newOffset:
+        while idx < maxIdx:
+            new_offset = self.globalIdx[idx]
+            if n <= new_offset:
                 break
             idx += 1
-            offset = newOffset
-            
-        cache = self.cache[idx]
+            offset = new_offset
+
         cache = self.cache[idx]
         startIdx = n - offset
         if startIdx == 0:
             s = 0
         else:
-            s = cache.idx[startIdx-1]
-        return cache.dat[ s:cache.idx[startIdx] ]
-        
+            s = cache.idx[startIdx - 1]
+        return cache.dat[s:cache.idx[startIdx]]
+
     def write(self, s):
         l = len(s)
-        if self.locWithinBuffer + l > self.bufferSize:
+        if self.buffer_loc + l > self.buf_size:
             self.allocate()
-            
-        self.current.dat[self.locWithinBuffer:self.locWithinBuffer+l] = s
-        self.locWithinBuffer += l
-        
-        self.current.idx[self.idxWithinBuffer] = self.locWithinBuffer
-        self.idxWithinBuffer += 1
-        
+
+        self.current.dat[self.buffer_loc:self.buffer_loc + l] = s
+        self.buffer_loc += l
+
+        self.current.idx[self.buffer_idx] = self.buffer_loc
+        self.buffer_idx += 1
+
         self.globalIdx[self.current.fileIdx] = self.idx
-        self.idx             += 1
+        self.idx += 1
+
 
 def choice():
-    return "%s_%s_%s" % (random.choice( [1,2,3,4,5] ),
-                         random.choice( ['foo','bar','baz'] ),
-                         random.choice( [ 'jijwjdiw','fjefiejf','ifjeijfeijf']) )
+    return "%s_%s_%s" % (random.choice([1, 2, 3, 4, 5]),
+                         random.choice(['foo', 'bar', 'baz']),
+                         random.choice(['jijwjdiw', 'fjefiejf', 'ifjeijfeijf']) )
 
-if __name__=='__main__':
-    import tempfile
-    d = tempfile.mkdtemp( )
+
+if __name__ == '__main__':
     if 1:
-        def getMmap():
-            return MMAP( "%s/ledger" % d, 10000)
-    else:
-        def getMmap():
-            return MMAP( "/tmp/andy/ledg18" , 10000 )
+        import tempfile
 
-    i = 0
-    f = getMmap()
-    while i < 100000:
-        #print "Looping ", i
-        invar1 = (f.fileIdx, len(f.cache), f.globalIdx[f.fileIdx], f.idx, f.idxWithinBuffer, f.locWithinBuffer  )
-        f = getMmap()
-        invar2 = (f.fileIdx, len(f.cache), f.globalIdx[f.fileIdx], f.idx, f.idxWithinBuffer, f.locWithinBuffer  )
-
-        if not invar1==invar2:
-            print "Bad invariants %s %s" % (str(invar1), str(invar2))
-            break
-
-        import random
-        for x in range( random.choice( [ 4,  10, 23])):
-            f.write( "Run %05d                      " % i)
-            i += 1
-        f.flush()
-
-    #f = getMmap()
-    if 0:
-        f = getMmap()
-        choices = {}
+        d = tempfile.mkdtemp()
         if 1:
-            for i in range(100):
-                f.write("%05d" % i)
-
-        print "Before ", f.globalIdx[0], f.idx, f.idxWithinBuffer, f. locWithinBuffer, f.current.idx[100]
-        if 0:
-            for i in range(101):
-                if f[i] != "Choice number %s" % i:
-                    print "Bad idx %s %s" % (i, f[i])
-                if i % 1000 == 0:
-                    print i, f[i]
-
+            def getMmap():
+                return MMAPPersister("%s/ledger" % d, 10000)
+        else:
+            def getMmap():
+                return MMAPPersister("/tmp/andy/ledg18", 10000)
+        i = 0
         f = getMmap()
-        print "Idx is " , f.idxWithinBuffer, f.current.dat[f.current.idx[f.idxWithinBuffer]:f.current.idx[f.idxWithinBuffer+10]]
-        print len(f)
-        #f.write('foo')rr
-        print len(f)
-        print f.idx, f.idxWithinBuffer, f.findLast(), len(f), f.current.dat[:600]
-        print "After ", f.globalIdx[0], f.idx, f.idxWithinBuffer, f.locWithinBuffer, f.current.idx[100]
+        while i < 100000:
+            #print "Looping ", i
+            f = getMmap()
+            import random
 
-        if 0:
-            print "Writing", len(f)
-            print f[100]
-            f.write('bar')
-            print 'afterbar ', f.idx, f.idxWithinBuffer, f.findLast(), len(f), f.current.dat[:600]
+            for x in range(random.choice([4, 10, 23])):
+                f.write("Run %05d                      " % i)
+                i += 1
+            f.flush()
 
-            f.write('booyakasha')
-            print 'afterbooya ', f.idx, f.idxWithinBuffer, f.findLast(), len(f), f.current.dat[:600]
+import tempfile
 
+d = tempfile.mkdtemp()
+for t in range(50):
+    x = NumberBuffer(LONG_STRUCT, allocateMmap('%s/andy_%s.dat' % (d, t), 1000 * 8))
+    for i in range(t):
+        x[i] = t + 1 * 2
+    print t, len(x)

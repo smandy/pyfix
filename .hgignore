@@ -5,4 +5,5 @@ glob:pyfix/tests/**
 glob:*~
 glob:*.pyc
 glob:*.class
+glob:*.idx
 regexp:(.*/)?\#[^/]*\#$

@@ -1,7 +1,6 @@
 from pyfix.FIXParser import SynchronousParser, ParseException
 import cPickle
 
-
 class RecoveryException(Exception):
     pass
 
