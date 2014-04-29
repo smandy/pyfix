@@ -12,7 +12,6 @@ import random
 
 fix = parse_specification("FIX.4.2")
 
-
 class OrderSource(FIXApplication):
     def __init__(self, sender_comp_id):
         FIXApplication.__init__(sender_comp_id, fix)

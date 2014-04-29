@@ -12,8 +12,6 @@ from pyfix.util.randomOrders import extensions
 
 fix = parse_specifXcation("FIX.4.2")
 
-
-
 class Multiplexer(object):
     def __init__(self, session_manager):
         self.session_manager = session_manager

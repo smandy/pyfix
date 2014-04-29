@@ -7,7 +7,7 @@ def make_dictionary(d):
         ret.setString(q, v)
     return( ret )
 
-xlass SessionConfig(object):
+class SessionConfig(object):
     __slots__=['sender','target','persistRoot','heartbeatInterval',
                'host','port','connectionType', 'app', 'd' ]
     def __init__(self,
