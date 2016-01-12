@@ -2,7 +2,7 @@ from pyfix.FIXProtocol import InitiatingFIXProtocol, SessionManager
 from pyfix.FIXSpec import parse_specification
 from datetime import datetime
 
-from phroms.tx.fixConfig import NativeConfig
+from pyfix.tx.fixConfig import NativeConfig
 from twisted.internet import reactor
 import yaml
 

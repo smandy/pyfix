@@ -1,12 +1,12 @@
-# $Header: /Users/andy/cvs/dev/python/phroms/core/OrderGenerator.py,v 1.7 2009-01-09 16:27:50 andy Exp $
+# $Header: /Users/andy/cvs/dev/python/pyfix/core/OrderGenerator.py,v 1.7 2009-01-09 16:27:50 andy Exp $
 
 import random
 from   datetime import datetime
-from   phroms.messages.Order import  Order
-from phroms.messages.enum import Side
+from   pyfix.messages.Order import  Order
+from pyfix.messages.enum import Side
 
-from phroms.core.AccountManager  import AccountManager
-from phroms.core.SecurityManager import SecurityManager
+from pyfix.core.AccountManager  import AccountManager
+from pyfix.core.SecurityManager import SecurityManager
 
 class OrderGenerator:
     def __init__(self, prefix="TEST"):

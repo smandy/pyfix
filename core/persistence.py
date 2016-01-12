@@ -1,10 +1,10 @@
-from phroms.messages.enum.Side import Side
-from phroms.messages.Order     import Order
-from phroms.messages.Execution import Execution 
-from phroms.messages.enum      import ExecType
+from pyfix.messages.enum.Side import Side
+from pyfix.messages.Order     import Order
+from pyfix.messages.Execution import Execution 
+from pyfix.messages.enum      import ExecType
 
-from phroms.core.AccountManager  import AccountManager,  Account
-from phroms.core.SecurityManager import SecurityManager, Security
+from pyfix.core.AccountManager  import AccountManager,  Account
+from pyfix.core.SecurityManager import SecurityManager, Security
 
 class StringAttr:
     def set( self, target, name, persister):
@@ -195,8 +195,8 @@ persist2 = \
     ]
     }
 
-#from phroms.tx.ExecutionWrapper import ExecutionWrapper
-#from phroms.tx.OrderWrapper     import OrderWrapper
+#from pyfix.tx.ExecutionWrapper import ExecutionWrapper
+#from pyfix.tx.OrderWrapper     import OrderWrapper
 #persist2[ExecutionWrapper] = persist2[Execution]
 #persist2[OrderWrapper]     = persist2[Order]
 

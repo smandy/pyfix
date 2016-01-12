@@ -1,4 +1,4 @@
-# $Header: /Users/andy/cvs/dev/python/phroms/util/OrderState.py,v 1.16 2009-01-06 17:49:39 andy Exp $
+# $Header: /Users/andy/cvs/dev/python/pyfix/util/OrderState.py,v 1.16 2009-01-06 17:49:39 andy Exp $
 
 from twisted.spread import pb
 
@@ -49,4 +49,4 @@ class OrderState(pb.Copyable,pb.RemoteCopy):
         return "OrderState: %s ( %s @ %s )" % (self.order, self.cumQty, self.avgPx() )
 
 pb.setUnjellyableForClass(OrderState,OrderState)
-#pb.setUnjellyableForClass(phroms.util.OrderState,phroms.util.OrderState)
+#pb.setUnjellyableForClass(pyfix.util.OrderState,pyfix.util.OrderState)

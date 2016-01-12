@@ -1,4 +1,4 @@
-# $Header: /Users/andy/cvs/dev/python/phroms/core/Manager.py,v 1.7 2009-01-09 22:48:15 andy Exp $
+# $Header: /Users/andy/cvs/dev/python/pyfix/core/Manager.py,v 1.7 2009-01-09 22:48:15 andy Exp $
 
 class Manager:
     def __init__(self, klazz, defaults):

@@ -1,6 +1,6 @@
-from phroms.core.OrderManager import OrderManager
-from phroms.messages.Order import *
-from phroms.core.persistence import *
+from pyfix.core.OrderManager import OrderManager
+from pyfix.messages.Order import *
+from pyfix.core.persistence import *
 
 
 from StringIO import StringIO

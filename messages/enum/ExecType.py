@@ -35,7 +35,7 @@ CANCELLED    = ExecType( 'CANCELLED', True, False, 4)
 DONE_FOR_DAY = ExecType( 'DONE_FOR_DAY', True, False, 3)
 FILL         = ExecType( 'FILL', True, True, 2)
 
-pb.setUnjellyableForClass( "phroms.messages.enum.ExecType.ExecType", ExecType)
+pb.setUnjellyableForClass( "pyfix.messages.enum.ExecType.ExecType", ExecType)
 
 #from tx.spread.pb import jelly
 #print jelly( PENDING_NEW)

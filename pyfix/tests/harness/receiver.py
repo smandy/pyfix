@@ -4,7 +4,7 @@ from pyfix.FIXSpec       import parse_specification
 import yaml
 import unittest
 
-from phroms.tx.fixConfig import SessionConfig
+from pyfix.tx.fixConfig import SessionConfig
 
 import tempfile
 

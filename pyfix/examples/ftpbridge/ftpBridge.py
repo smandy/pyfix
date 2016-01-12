@@ -6,7 +6,7 @@ from pyfix.examples.simpleordersend.sender import fix, config
 from pyfix.FIXProtocol import SessionManager
 from pyfix.FIXConfig import makeConfig
 from pyfix.util.sender import SendingProtocol
-from phroms.tx.ssh import getManholeFactory
+from pyfix.tx.ssh import getManholeFactory
 
 from twisted.cred.portal import Portal
 from twisted.cred.checkers import InMemoryUsernamePasswordDatabaseDontUse, ANONYMOUS

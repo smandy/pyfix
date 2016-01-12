@@ -1,4 +1,4 @@
-# $Header: /Users/andy/cvs/dev/python/phroms/examples/simpleordersend/sender.py,v 1.5 2009-03-02 16:57:32 andy Exp $
+# $Header: /Users/andy/cvs/dev/python/pyfix/examples/simpleordersend/sender.py,v 1.5 2009-03-02 16:57:32 andy Exp $
 
 from __future__ import with_statement
 

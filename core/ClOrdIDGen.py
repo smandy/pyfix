@@ -1,4 +1,4 @@
-# $Header: /Users/andy/cvs/dev/python/phroms/core/ClOrdIDGen.py,v 1.3 2009-01-05 20:44:26 andy Exp $ 
+# $Header: /Users/andy/cvs/dev/python/pyfix/core/ClOrdIDGen.py,v 1.3 2009-01-05 20:44:26 andy Exp $ 
 
 from datetime import datetime
 

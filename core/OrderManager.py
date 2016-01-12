@@ -1,8 +1,8 @@
-# $Header: /Users/andy/cvs/dev/python/phroms/core/OrderManager.py,v 1.19 2009-01-09 22:48:15 andy Exp $
+# $Header: /Users/andy/cvs/dev/python/pyfix/core/OrderManager.py,v 1.19 2009-01-09 22:48:15 andy Exp $
 
-from phroms.messages.Order     import Order
-from phroms.messages.Execution import Execution
-from phroms.util.OrderState    import OrderState
+from pyfix.messages.Order     import Order
+from pyfix.messages.Execution import Execution
+from pyfix.util.OrderState    import OrderState
 
 FLUSH_CLOSED_ORDERS = True
 import time
