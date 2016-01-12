@@ -1,11 +1,9 @@
-.. _tut-examples:  .. _tut-interactive:  
 
-**************** 
-Description
-****************  
 
-Introduction 
-======================= 
+
+
+
+# Introduction #
 
 pyFIX is an implementation of the Financial Implementation eXchange
 (FIX) protocol. It utilises python's 'Twisted' event processing
@@ -19,8 +17,7 @@ opened. This may be useful in multi-homed setups. Due to twisted's
 asynchronous processing model the number of sessions can scale
 reasonably well.
 
-Features 
-=========
+# Features #
 
 Implementation has following features.
 

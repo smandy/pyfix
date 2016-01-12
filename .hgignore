@@ -1,9 +1,0 @@
-glob: *.db
-glob:*.db
-glob:dependencies/**
-glob:pyfix/tests/**
-glob:*~
-glob:*.pyc
-glob:*.class
-glob:*.idx
-regexp:(.*/)?\#[^/]*\#$
