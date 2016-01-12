@@ -1,7 +1,6 @@
 from twisted.internet import reactor
 from twisted.internet.protocol import ReconnectingClientFactory, Factory
 
-
 class AcceptorFactory(Factory):
     initiator = False
 

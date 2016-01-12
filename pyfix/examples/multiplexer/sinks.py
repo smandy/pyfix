@@ -10,7 +10,6 @@ from twisted.internet import reactor
 
 fix = parse_specification(version="FIX.4.2")
 
-
 class Receiver(FIXApplication):
     def __init__(self):
         FIXApplication.__init__(self, fix)

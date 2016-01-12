@@ -1,7 +1,7 @@
-from phroms.messages.enum  import Side
-from phroms.messages.enum import ExecType 
-from phroms.messages.Execution     import Execution
-from phroms.util.OrderState        import OrderState
+from pyfix.messages.enum  import Side
+from pyfix.messages.enum import ExecType 
+from pyfix.messages.Execution     import Execution
+from pyfix.util.OrderState        import OrderState
 from twisted.spread                import pb
 
 class Order(pb.Copyable, pb.RemoteCopy):
