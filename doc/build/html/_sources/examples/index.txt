@@ -6,11 +6,11 @@ Interactive Use
 
 .. _tut-interactive:
 
-
 Interactive Interpreter
 =======================
 
-One of the best ways of becoming familiar with the hierarchy is to use the interactive interpreter.
+One of the best ways of becoming familiar with the hierarchy is to use
+the interactive interpreter.
 
 For example::
 

@@ -67,17 +67,26 @@ Multiplexer
 Mux Gui
 =======
 
-The multiplexer, source and sink are also configured to make their respective session managers available for connection via the twisted PB protocol. 
+The multiplexer, source and sink are also configured to make their
+respective session managers available for connection via the twisted
+PB protocol.
 
 *Choosing A SessionManager to Connect To*
 
 .. image:: muxGui1.jpg
 
-When the muxGui starts up it broadcasts a multicast packet requesting any listening sessionmanagers to respond with the host and port over which a pb connection can be initiated to interact with the session manager.
+When the muxGui starts up it broadcasts a multicast packet requesting
+any listening sessionmanagers to respond with the host and port over
+which a pb connection can be initiated to interact with the session
+manager.
 
 
-Once connected, the gui displays the current status of each session covered by the session manager.
-In this case, the MUX-SINKXX entries show that all sessions initiated by the multiplexer are currently connected, and the MUX-SOURCEXX enties show that the incoming sessions are all connected as well. The Blue and red fields show the last order and execution message to have passed through the SessionManager.
+Once connected, the gui displays the current status of each session
+covered by the session manager.  In this case, the MUX-SINKXX entries
+show that all sessions initiated by the multiplexer are currently
+connected, and the MUX-SOURCEXX enties show that the incoming sessions
+are all connected as well. The Blue and red fields show the last order
+and execution message to have passed through the SessionManager.
 
 *The MUX SessionManager showing connected Sessions and Last Messages*
 
@@ -87,11 +96,23 @@ In this case, the MUX-SINKXX entries show that all sessions initiated by the mul
 TimeTrial
 =========
 
-An application which should give an indication of realistic performance limits of the system.
+An application which should give an indication of realistic
+performance limits of the system.
 
-This app 'abused' the FIX test request by spamming a receiving app with test requests, the id of which contains a pickle of the sending time, and current message frequency when the test requets is send. The sending application makes a note of the arrival time of each request, and the optimal freuency that occurs. On the test hardware used the system scales linearly up to approximately 100 msgs per second, at which point any attempts to send faster result in the system backing up.
+This app 'abused' the FIX test request by spamming a receiving app
+with test requests, the id of which contains a pickle of the sending
+time, and current message frequency when the test requets is send. The
+sending application makes a note of the arrival time of each request,
+and the optimal freuency that occurs. On the test hardware used the
+system scales linearly up to approximately 100 msgs per second, at
+which point any attempts to send faster result in the system backing
+up.
 
-It's important to note what exactly this figure represents. It is a steady state message rate ( not burst rate), and when a frequency of 100 is states, it means that the system can send a message, haev another engine process the test request, reply, and have the sending app receive the reply.
+It's important to note what exactly this figure represents. It is a
+steady state message rate ( not burst rate), and when a frequency of
+100 is states, it means that the system can send a message, haev
+another engine process the test request, reply, and have the sending
+app receive the reply.
 
 .. image:: timetrial.png
 

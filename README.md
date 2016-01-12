@@ -1,8 +1,3 @@
-
-
-
-
-
 # Introduction #
 
 pyFIX is an implementation of the Financial Implementation eXchange

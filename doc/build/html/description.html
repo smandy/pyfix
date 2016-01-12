@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -15,7 +13,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -27,44 +25,33 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="pyfix 0.0.1 documentation" href="index.html" />
     <link rel="next" title="Interactive Use" href="examples/index.html" />
-    <link rel="prev" title="pyFIX Documentation" href="index.html" /> 
+    <link rel="prev" title="pyFIX Documentation" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
   </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="examples/index.html" title="Interactive Use"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="index.html" title="pyFIX Documentation"
-             accesskey="P">previous</a> |</li>
-        <li><a href="index.html">pyfix 0.0.1 documentation</a> &raquo;</li> 
-      </ul>
-    </div>  
+  <body role="document">  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="description">
 <h1>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<p>pyFIX is an implementation of the Financial Implementation eXchange (FIX) protocol. It utilises python&#8217;s &#8216;Twisted&#8217; event processing framework to handle TCP/IP connectivity and session management. It supports both initiator and acceptor type sessions.</p>
-<p>The system supports an arbitrary number of outgoing and incoming connections. Each &#8216;acceptor&#8217; session is associated with only one listening port. However any number of listening ports can be opened. This may be useful in multi-homed setups. Due to twisted&#8217;s asynchronous processing model the number of sessions can scale reasonably well.</p>
-</div>
-<div class="section" id="background">
-<h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
-<p>This code began as an attempt to learn to use metaclasses properly during a very cold snap in London when there was little that could be done outside once the novelty of making snowmen had worn off.</p>
-<p>From experiments with metaclasses it seemed natural that the FIX Specification would lend itself quite nicely to being dynamically rendered <em>on-the-fly</em> as a class hierarchy.</p>
-<p>Once that was done it seemed like a natural next step to see if it was possible to generate a FIX message which would pass validation by a FIX parser.</p>
-<p>Moving on from there it seemed like a next obvious step to see if the messages could be sent down a socket so as to convince a real FIX Server into accepting a connection and heartbeating sufficiently with it, such that it wouldn&#8217;t close the connection.</p>
-<p>By this time it was evident that enough had been done that it would be a shame to not go the whole hog and provide a reasonably complete protocol implementation.</p>
+<p>pyFIX is an implementation of the Financial Implementation eXchange
+(FIX) protocol. It utilises python&#8217;s &#8216;Twisted&#8217; event processing
+framework to handle TCP/IP connectivity and session management. It
+supports both initiator and acceptor type sessions.</p>
+<p>The system supports an arbitrary number of outgoing and incoming
+connections. Each &#8216;acceptor&#8217; session is associated with only one
+listening port. However any number of listening ports can be
+opened. This may be useful in multi-homed setups. Due to twisted&#8217;s
+asynchronous processing model the number of sessions can scale
+reasonably well.</p>
 </div>
 <div class="section" id="features">
 <h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
@@ -74,19 +61,32 @@
 <p>Message and Field classes are created on startup according to the spec using python&#8217;s class factory logic.</p>
 </li>
 <li><p class="first">Type safe fields</p>
-<p>The FIX Field classes are aware of their types and will fail to validate if a field is created using a value that cannot be converted to the required type.</p>
+<p>The FIX Field classes are aware of their types and will fail to
+validate if a field is created using a value that cannot be
+converted to the required type.</p>
 </li>
 <li><p class="first">Dynamic Session creation</p>
-<p>Sessions can be added to the server programattically during the session.</p>
+<p>Sessions can be added to the server programattically at runtime.</p>
 </li>
 <li><p class="first">Multicast discovery</p>
-<p>A simple multicast discovery library is included which allows Session managers to anounce their presence on a network. This functionality is useful for guis to locate remote sessions managers, as in the more complex use cases there may be several session managers running on different hosts at the same time.</p>
+<p>A simple multicast discovery library is included which allows
+Session managers to anounce their presence on a network. This
+functionality is useful for guis to locate remote sessions managers,
+as in the more complex use cases there may be several session
+managers running on different hosts at the same time.</p>
 </li>
 <li><p class="first">Benefits from Twisted</p>
-<p>Being based on twisted all the benefits of writing an app using the twisted framework are available, such as -</p>
+<p>Being based on twisted all the benefits of writing an app using the
+twisted framework are available, such as -</p>
 <ul>
 <li><p class="first">Programattic &#8216;remote&#8217; interface to the server.</p>
-<p>Examples include a pyglet based session viewer example is included which shows conecting to an instance with the PB protocol. Also an FTP/FIX bridge is in included which demonstrates how it it possible to FTP a file info the server which will then be translated to FIX orders, the executions for which are made available as downloadable &#8216;psuedo-files&#8217; made available using the twited FTP server.</p>
+<p>Examples include a pyglet based session viewer example is included
+which shows conecting to an instance with the PB protocol. Also an
+FTP/FIX bridge is in included which demonstrates how it it
+possible to FTP a file info the server which will then be
+translated to FIX orders, the executions for which are made
+available as downloadable &#8216;psuedo-files&#8217; made available using the
+twited FTP server.</p>
 </li>
 </ul>
 </li>
@@ -94,19 +94,34 @@
 </div>
 <div class="section" id="dependencies">
 <h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
-<p>In general have tried to keep dependencies to a minimum, and stuck to using modules in the standard library where available. Cases where have had to veer outside the standard library have tried to stick with modules that can be installed with easy_install. With the exception of wxPython the remainder of the dependencies have all been tested to install cleanly on top of a fresh python installation using easy_install.</p>
+<blockquote>
+<div>In general have tried to keep dependencies to a minimum, and stuck
+to using modules in the standard library where available. Cases
+where have had to veer outside the standard library have tried to
+stick with modules that can be installed with easy_install. With
+the exception of wxPython the remainder of the dependencies have
+all been tested to install cleanly on top of a fresh python
+installation using easy_install.</div></blockquote>
 <ul>
 <li><p class="first">Twisted 8.2.0</p>
 <p>The code was developed using the ( at the time ) latest version of Twisted.</p>
 </li>
 <li><p class="first">Python 2.5/2.6</p>
-<p>Pyfix has been tested on python2.5 and python2.6. the core of the parser depends on the relatively new (and fast!) string.partition method to parse FIX messages.</p>
+<p>Pyfix has been tested on python2.5 and python2.6. the core of the
+parser depends on the relatively new (and fast!) string.partition
+method to parse FIX messages.</p>
 </li>
 <li><p class="first">Berkeley DB.</p>
-<p>Used for persistence of FIX messages. The RECNO format is used since it supports integer keys and   lends itself nicely to storing session state. It should be straightforward to implement a version   that uses any of the anydbm variants, although this would require switching to string keys. For now   I&#8217;ll assume that the bsddb or bsddb3 modules are availbale ( or easily installable on the client   machine).</p>
+<p>Used for persistence of FIX messages. The RECNO format is used since
+it supports integer keys and lends itself nicely to storing session
+state. It should be straightforward to implement a version that uses
+any of the anydbm variants, although this would require switching to
+string keys. For now I&#8217;ll assume that the bsddb or bsddb3 modules
+are availbale ( or easily installable on the client machine).</p>
 </li>
 <li><p class="first">pyyaml</p>
-<p>Session config is based on yaml but the config objects can be created directly in python if preferred.</p>
+<p>Session config is based on yaml but the config objects can be
+created directly in python if preferred.</p>
 </li>
 <li><p class="first">pyglet</p>
 <p>Required by one of the gui examples.</p>
@@ -115,7 +130,8 @@
 <p>Required for the tabular message viewer application.</p>
 </li>
 <li><p class="first">PyCrypto ( Optional )</p>
-<p>Required by the manhols ssh server if the remote interpreter functionality is to be used.</p>
+<p>Required by the manhols ssh server if the remote interpreter
+functionality is to be used.</p>
 </li>
 <li><p class="first">pyOpenSSL ( Optional )</p>
 <p>Required for SSL encrypted links</p>
@@ -128,31 +144,34 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Description</a><ul>
 <li><a class="reference internal" href="#introduction">Introduction</a></li>
-<li><a class="reference internal" href="#background">Background</a></li>
 <li><a class="reference internal" href="#features">Features</a></li>
 <li><a class="reference internal" href="#dependencies">Dependencies</a></li>
 </ul>
 </li>
 </ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">pyFIX Documentation</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="examples/index.html"
-                        title="next chapter">Interactive Use</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/description.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">pyFIX Documentation</a></li>
+      <li>Next: <a href="examples/index.html" title="next chapter">Interactive Use</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/description.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
@@ -169,24 +188,20 @@
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="examples/index.html" title="Interactive Use"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="index.html" title="pyFIX Documentation"
-             >previous</a> |</li>
-        <li><a href="index.html">pyfix 0.0.1 documentation</a> &raquo;</li> 
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2009, Andy Smith.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      &copy;2009, Andy Smith.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="_sources/description.txt"
+          rel="nofollow">Page source</a>
     </div>
+
+    
+
+    
   </body>
 </html>

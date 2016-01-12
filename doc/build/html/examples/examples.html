@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -27,29 +25,18 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyfix 0.0.1 documentation" href="../index.html" />
     <link rel="next" title="Tests" href="../tests.html" />
-    <link rel="prev" title="Interactive Use" href="index.html" /> 
+    <link rel="prev" title="Interactive Use" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
   </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../tests.html" title="Tests"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="index.html" title="Interactive Use"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyfix 0.0.1 documentation</a> &raquo;</li> 
-      </ul>
-    </div>  
+  <body role="document">  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="code-examples">
 <span id="tut-examples"></span><h1>Code Examples<a class="headerlink" href="#code-examples" title="Permalink to this headline">¶</a></h1>
@@ -60,7 +47,7 @@
 <div><p>The main examples are all configured with <cite>yaml</cite> files. A number of recent projects have been using single ( or few ) yaml files as a means of app configuration, as opposed to the traditional multi-XML file approach. ( Ruby on Rails, Google AppEngine ).</p>
 <p>Below is an example &#8216;acceptor&#8217; config, with additional config sections for the manhole ( ssh interactive interpreter), and web listen ports used by other examples.</p>
 <p>This configuration sets up 4 listening sessions:</p>
-<div class="highlight-python"><pre>default: {ConnectionType: acceptor,
+<div class="highlight-python"><div class="highlight"><pre>default: {ConnectionType: acceptor,
           FileStorePath: store,
           HeartbeatInterval: 30,
           PersistRoot: ../persist/receive,
@@ -77,7 +64,8 @@ manhole:
 webServer:
   listenPort: 8101
 nevow:
-  listenPort: 8102</pre>
+  listenPort: 8102
+</pre></div>
 </div>
 </div></blockquote>
 </div>
@@ -110,20 +98,41 @@ Example is in two parts, sender and receiver. The order in which they are starte
 </div>
 <div class="section" id="mux-gui">
 <h2>Mux Gui<a class="headerlink" href="#mux-gui" title="Permalink to this headline">¶</a></h2>
-<p>The multiplexer, source and sink are also configured to make their respective session managers available for connection via the twisted PB protocol.</p>
+<p>The multiplexer, source and sink are also configured to make their
+respective session managers available for connection via the twisted
+PB protocol.</p>
 <p><em>Choosing A SessionManager to Connect To</em></p>
 <img alt="../_images/muxGui1.jpg" src="../_images/muxGui1.jpg" />
-<p>When the muxGui starts up it broadcasts a multicast packet requesting any listening sessionmanagers to respond with the host and port over which a pb connection can be initiated to interact with the session manager.</p>
-<p>Once connected, the gui displays the current status of each session covered by the session manager.
-In this case, the MUX-SINKXX entries show that all sessions initiated by the multiplexer are currently connected, and the MUX-SOURCEXX enties show that the incoming sessions are all connected as well. The Blue and red fields show the last order and execution message to have passed through the SessionManager.</p>
+<p>When the muxGui starts up it broadcasts a multicast packet requesting
+any listening sessionmanagers to respond with the host and port over
+which a pb connection can be initiated to interact with the session
+manager.</p>
+<p>Once connected, the gui displays the current status of each session
+covered by the session manager.  In this case, the MUX-SINKXX entries
+show that all sessions initiated by the multiplexer are currently
+connected, and the MUX-SOURCEXX enties show that the incoming sessions
+are all connected as well. The Blue and red fields show the last order
+and execution message to have passed through the SessionManager.</p>
 <p><em>The MUX SessionManager showing connected Sessions and Last Messages</em></p>
 <img alt="../_images/muxGui2.jpg" src="../_images/muxGui2.jpg" />
 </div>
 <div class="section" id="timetrial">
 <h2>TimeTrial<a class="headerlink" href="#timetrial" title="Permalink to this headline">¶</a></h2>
-<p>An application which should give an indication of realistic performance limits of the system.</p>
-<p>This app &#8216;abused&#8217; the FIX test request by spamming a receiving app with test requests, the id of which contains a pickle of the sending time, and current message frequency when the test requets is send. The sending application makes a note of the arrival time of each request, and the optimal freuency that occurs. On the test hardware used the system scales linearly up to approximately 100 msgs per second, at which point any attempts to send faster result in the system backing up.</p>
-<p>It&#8217;s important to note what exactly this figure represents. It is a steady state message rate ( not burst rate), and when a frequency of 100 is states, it means that the system can send a message, haev another engine process the test request, reply, and have the sending app receive the reply.</p>
+<p>An application which should give an indication of realistic
+performance limits of the system.</p>
+<p>This app &#8216;abused&#8217; the FIX test request by spamming a receiving app
+with test requests, the id of which contains a pickle of the sending
+time, and current message frequency when the test requets is send. The
+sending application makes a note of the arrival time of each request,
+and the optimal freuency that occurs. On the test hardware used the
+system scales linearly up to approximately 100 msgs per second, at
+which point any attempts to send faster result in the system backing
+up.</p>
+<p>It&#8217;s important to note what exactly this figure represents. It is a
+steady state message rate ( not burst rate), and when a frequency of
+100 is states, it means that the system can send a message, haev
+another engine process the test request, reply, and have the sending
+app receive the reply.</p>
 <img alt="../_images/timetrial.png" src="../_images/timetrial.png" />
 </div>
 </div>
@@ -132,7 +141,7 @@ In this case, the MUX-SINKXX entries show that all sessions initiated by the mul
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
@@ -146,19 +155,23 @@ In this case, the MUX-SINKXX entries show that all sessions initiated by the mul
 </ul>
 </li>
 </ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">Interactive Use</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="../tests.html"
-                        title="next chapter">Tests</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/examples/examples.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Interactive Use</a></li>
+      <li>Next: <a href="../tests.html" title="next chapter">Tests</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/examples/examples.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -175,24 +188,20 @@ In this case, the MUX-SINKXX entries show that all sessions initiated by the mul
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../tests.html" title="Tests"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="index.html" title="Interactive Use"
-             >previous</a> |</li>
-        <li><a href="../index.html">pyfix 0.0.1 documentation</a> &raquo;</li> 
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2009, Andy Smith.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      &copy;2009, Andy Smith.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="../_sources/examples/examples.txt"
+          rel="nofollow">Page source</a>
     </div>
+
+    
+
+    
   </body>
 </html>
