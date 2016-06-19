@@ -1,5 +1,3 @@
-# $Header: /Users/andy/cvs/dev/python/pyfix/core/OrderManager.py,v 1.19 2009-01-09 22:48:15 andy Exp $
-
 from pyfix.messages.Order     import Order
 from pyfix.messages.Execution import Execution
 from pyfix.util.OrderState    import OrderState

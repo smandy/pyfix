@@ -1,5 +1,3 @@
-# $Header: /Users/andy/cvs/dev/python/pyfix/util/OrderState.py,v 1.16 2009-01-06 17:49:39 andy Exp $
-
 from twisted.spread import pb
 
 class OrderState(pb.Copyable,pb.RemoteCopy):

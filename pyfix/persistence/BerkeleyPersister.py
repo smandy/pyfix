@@ -1,6 +1,6 @@
-# $Header: /Users/andy/cvs/dev/python/pyfix/fix/BerkeleyPersister.py,v 1.16 2009-02-24 17:01:00 andy Exp $
+from os.path import expanduser
 
-fileRoot = "/Users/andy/persist"
+fileRoot = expanduser("~/persist")
 
 from datetime import datetime
 import os
@@ -111,7 +111,5 @@ class BerkeleyPersister:
         return ret
 
 if __name__=='__main__':
-    fr = "/Users/andy/persist/send/20090112"
-    bp = BerkeleyPersister(fileRoot, "SENDER", "PHROMS", dt = datetime( 2009, 1, 12) )
+    bp = BerkeleyPersister(fileRoot, "SENDER", "PHROMS", dt = datetime.now() )
     (inDb,outDb) = bp.getTodayPersister()
-    #p = BerkeleyPersister( fileRoot, dt = datetime(2009, 11,1) )

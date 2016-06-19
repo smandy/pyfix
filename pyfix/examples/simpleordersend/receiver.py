@@ -47,7 +47,7 @@ class Receiver(FIXApplication):
             print ">>>MYEXEC %s %s" % (reply, message_string)
             self.protocol.transport.write(message_string)
         else:
-            dup = msg.get_header_field_value(f.PossDupFlag, default=False)
+            msg.get_header_field_value(f.PossDupFlag, default=False)
 
 config = yaml.load(open('../config/receiver.yaml', 'r'))
 

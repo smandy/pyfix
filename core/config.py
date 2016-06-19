@@ -1,5 +1,3 @@
-# $Header: /Users/andy/cvs/dev/python/pyfix/core/config.py,v 1.2 2009-01-09 22:48:15 andy Exp $
-
 from pyfix.core.AccountManager   import AccountManager
 from pyfix.core.SecurityManager  import SecurityManager
 from pyfix.core.OrderGenerator   import OrderGenerator

@@ -1,5 +1,3 @@
-# $Header: /Users/andy/cvs/dev/python/pyfix/fix/util/MessageSplitter.py,v 1.1 2009-02-09 23:25:09 andy Exp $
-
 class MessageSplitter:
     def __init__(self, dispatch):
         self.dispatch = dispatch

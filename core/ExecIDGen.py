@@ -1,5 +1,3 @@
-# $Header: /Users/andy/cvs/dev/python/pyfix/core/ExecIDGen.py,v 1.3 2009-01-10 01:55:50 andy Exp $ 
-
 from datetime import datetime
 
 class ExecIDGen(object):

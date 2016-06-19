@@ -1,5 +1,3 @@
-# $Header: /Users/andy/cvs/dev/python/pyfix/core/OrderGenerator.py,v 1.7 2009-01-09 16:27:50 andy Exp $
-
 import random
 from   datetime import datetime
 from   pyfix.messages.Order import  Order

@@ -1,5 +1,3 @@
-# $Header: /Users/andy/cvs/dev/python/pyfix/examples/simpleordersend/receiver.py,v 1.4 2009-03-02 16:57:32 andy Exp $
-
 import yaml
 
 from pyfix.FIXProtocol   import SessionManager
