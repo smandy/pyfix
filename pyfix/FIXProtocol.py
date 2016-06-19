@@ -1,4 +1,4 @@
-from twisted.internet.protocol import Protocol, ReconnectingClientFactory, Factory
+from twisted.internet.protocol import Protocol
 from twisted.internet import reactor
 from datetime import datetime
 from types import IntType, ListType
@@ -123,8 +123,7 @@ class AcceptorAwaitingLogon(AwaitingLogon):
                   sender,
                   target,
                   f.MsgSeqNum(1),
-                  sending_time
-        ]
+                  sending_time ]
         footer = [check_sum]
         msg.header_fields = header
         msg.footer_fields = footer

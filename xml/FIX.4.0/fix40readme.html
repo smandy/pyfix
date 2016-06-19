@@ -1,0 +1,42 @@
+<h1>FIX Repository Maintenance Release 2007-11-20</h1>
+<h2>FIX4.0 Summary of Changes</h2>
+<h3>Components.xml</h3>
+<p>Changed &lt;Category&gt; from "Common" to "Session" as a step in introduction of application version independence and transport independence - separation of session from application</p>
+<table>
+<tr>
+<td>
+<h4>From</h4>
+<pre>
+&lt;Components&gt;
+&lt;ComponentName&gt;StandardHeader&lt;/ComponentName&gt;
+&lt;ComponentType&gt;Block&lt;/ComponentType&gt;
+&lt;Category&gt;Common&lt;/Category&gt;
+&lt;MsgID&gt;1001&lt;/MsgID&gt;
+&lt;/Components&gt;
+&lt;Components&gt;
+&lt;ComponentName&gt;StandardTrailer&lt;/ComponentName&gt;
+&lt;ComponentType&gt;Block&lt;/ComponentType&gt;
+&lt;Category&gt;Common&lt;/Category&gt;
+&lt;MsgID&gt;1002&lt;/MsgID&gt;
+&lt;/Components&gt;
+</pre>
+</td>
+<td>
+<h4>To</h4>
+<pre>
+&lt;Components&gt;
+&lt;ComponentName&gt;StandardHeader&lt;/ComponentName&gt;
+&lt;ComponentType&gt;Block&lt;/ComponentType&gt;
+&lt;Category&gt;Session&lt;/Category&gt;
+&lt;MsgID&gt;1001&lt;/MsgID&gt;
+&lt;/Components&gt;
+&lt;Components&gt;
+&lt;ComponentName&gt;StandardTrailer&lt;/ComponentName&gt;
+&lt;ComponentType&gt;Block&lt;/ComponentType&gt;
+&lt;Category&gt;Session&lt;/Category&gt;
+&lt;MsgID&gt;1002&lt;/MsgID&gt;
+&lt;/Components&gt;
+</pre>
+</td>
+</tr>
+</table>

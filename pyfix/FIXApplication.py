@@ -4,7 +4,6 @@ import cPickle
 class RecoveryException(Exception):
     pass
 
-
 class FIXApplication(object):
     def __init__(self, fix):
         self.state = None
@@ -63,7 +62,7 @@ class FIXApplication(object):
                 msg, _, _ = sp.parse(d[1])
                 self.recovered_message(msg)
             except ParseException:
-                obj = cPickle.loads(d[1])
+                msg = cPickle.loads(d[1])
                 self.recovered_message(msg)
         c.close()
         self.on_recovery_done()

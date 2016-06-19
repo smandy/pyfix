@@ -2,7 +2,6 @@ from twisted.spread import pb
 from twisted.internet import reactor, task
 from pyfix.alladin.Discovery import Discoverable
 
-
 class FIXPerspective(pb.Root):
     def __init__(self, session_manager, description="FIX Perspective"):
         self.session_listeners = []

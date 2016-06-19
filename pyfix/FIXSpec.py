@@ -498,8 +498,13 @@ subClasses = {'UTCTimestamp': UTCTimeStampField,
               'Quantity': IntegerField}
 
 
+from os.path import dirname as opdn, join as opj
+
+xmlLocation = opj( opdn( opdn( __file__)), 'xml')
+print "Xml location is %s" % xmlLocation
+
 def parse_specification(version="FIX.4.2",
-                        file_root="/home/andy/wc/resources/fix/fix-repository"):
+                        file_root= xmlLocation ):
     fix = FixSpec()
     fix.version = version
     version_root = os.path.join(file_root, version)

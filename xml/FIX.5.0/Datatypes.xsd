@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated from Datatypes.xml by XMLBuddy -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="Base">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="xs:Integer"/>
+				<xs:enumeration value="xs:PositiveInteger"/>
+				<xs:enumeration value="xs:boolean"/>
+				<xs:enumeration value="xs:date"/>
+				<xs:enumeration value="xs:dateTime"/>
+				<xs:enumeration value="xs:decimal"/>
+				<xs:enumeration value="xs:nonNegativeInteger"/>
+				<xs:enumeration value="xs:string"/>
+				<xs:enumeration value="xs:time"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="BaseType">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="String"/>
+				<xs:enumeration value="char"/>
+				<xs:enumeration value="float"/>
+				<xs:enumeration value="int"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="BuiltIn">
+		<xs:complexType/>
+	</xs:element>
+	<xs:element name="Datatype">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="BaseType"/>
+				<xs:element ref="Desc"/>
+				<xs:element ref="Example"/>
+				<xs:element ref="TypeName"/>
+				<xs:element ref="XML"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Desc" type="xs:string"/>
+	<xs:element name="Example" type="xs:string"/>	
+	<xs:element name="MinInclusive" type="xs:integer"/>
+	<xs:element name="Pattern" type="xs:string"/>
+	<xs:element name="TypeName" type="xs:string"/>
+	<xs:element name="XML">
+		<xs:complexType>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="Base"/>
+				<xs:element ref="BuiltIn"/>
+				<xs:element ref="MinInclusive"/>
+				<xs:element ref="Pattern"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="dataroot">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Datatype" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

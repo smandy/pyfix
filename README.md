@@ -88,10 +88,6 @@ Dependencies
   Session config is based on yaml but the config objects can be
   created directly in python if preferred.
 
-- pyglet
-
-  Required by one of the gui examples.
-
 - wxPython
 
   Required for the tabular message viewer application.

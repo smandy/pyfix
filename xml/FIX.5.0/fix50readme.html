@@ -1,0 +1,289 @@
+<h1>FIX Repository Maintenance Release 2007-11-20</h1>
+<h2>FIX5.0 Summary of Changes</h2>
+<h3>Component.xml</h3>
+<table>
+
+<tr>
+<td>
+<h4>From</h4>
+</td>
+<td>
+<h4>To</h4>
+</td>
+</tr>
+
+<tr>
+<td colspan="2">
+<p>Changed <b>HopGrp</b> message &lt;Category&gt; from "Common" to "Session" as a step toward separating session from application</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<pre>
+  &lt;Components&gt;
+    &lt;ComponentName&gt;HopGrp&lt;/ComponentName&gt;
+    &lt;ComponentType&gt;ImplicitBlock&lt;/ComponentType&gt;
+    &lt;Category&gt;Common&lt;/Category&gt;
+    &lt;MsgID&gt;2085&lt;/MsgID&gt;
+    &lt;OverrideAbbr&gt;HopGrp&lt;/OverrideAbbr&gt;
+    &lt;NotReqXML&gt;0&lt;/NotReqXML&gt;
+  &lt;/Components&gt;
+</pre>
+</td>
+<td>
+<pre>
+  &lt;Components&gt;
+    &lt;ComponentName&gt;HopGrp&lt;/ComponentName&gt;
+    &lt;ComponentType&gt;ImplicitBlock&lt;/ComponentType&gt;
+    &lt;Category&gt;Session&lt;/Category&gt;
+    &lt;MsgID&gt;2085&lt;/MsgID&gt;
+    &lt;OverrideAbbr&gt;HopGrp&lt;/OverrideAbbr&gt;
+    &lt;NotReqXML&gt;0&lt;/NotReqXML&gt;
+  &lt;/Components&gt;
+</pre>
+</td>
+</tr>
+</table>
+<h3>MsgType.xml</h3>
+<table>
+
+<tr>
+<td colspan="2">
+<p>Changed <b>BidResponse</b> message &lt;Category&gt; from "SingleGeneralOrderHandling" to "ProgramTrading"</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<h4>From</h4>
+</td>
+<td>
+<h4>To</h4>
+</td>
+</tr>
+<tr>
+<td>
+<pre>
+&lt;MsgType&gt;
+&lt;MsgType&gt;l&lt;/MsgType&gt;
+&lt;MessageName&gt;BidResponse&lt;/MessageName&gt;
+&lt;ComponentType&gt;Message&lt;/ComponentType&gt;
+&lt;Category&gt;SingleGeneralOrderHandling&lt;/Category&gt;
+&lt;MsgID&gt;45&lt;/MsgID&gt;
+&lt;Section&gt;Trade&lt;/Section&gt;
+&lt;/MsgType&gt;
+</pre>
+</td>
+<td>
+<pre>
+&lt;MsgType&gt;
+&lt;MsgType&gt;l&lt;/MsgType&gt;
+&lt;MessageName&gt;BidResponse&lt;/MessageName&gt;
+&lt;ComponentType&gt;Message&lt;/ComponentType&gt;
+&lt;Category&gt;ProgramTrading&lt;/Category&gt;
+&lt;MsgID&gt;45&lt;/MsgID&gt;
+&lt;Section&gt;Trade&lt;/Section&gt;
+&lt;/MsgType&gt;
+</pre>
+</td>
+</tr>
+
+<tr>
+<td colspan="2">
+<p>Changed <b>AllocationInstructionAlert</b> message &lt;Section&gt; from "Allocation" to "Post Trade"</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<h4>From</h4>
+</td>
+<td>
+<h4>To</h4>
+</td>
+</tr>
+<tr>
+<td>
+<pre>
+  &lt;MsgType&gt;
+    &lt;MsgType&gt;BM&lt;/MsgType&gt;
+    &lt;MessageName&gt;AllocationInstructionAlert&lt;/MessageName&gt;
+    &lt;ComponentType&gt;Message&lt;/ComponentType&gt;
+    &lt;Category&gt;Allocation&lt;/Category&gt;
+    &lt;MsgID&gt;98&lt;/MsgID&gt;
+    &lt;Section&gt;Allocation&lt;/Section&gt;
+    &lt;AbbrName&gt;AllocInstrAlert&lt;/AbbrName&gt;
+    &lt;OverrideAbbr&gt;AllocInstrAlert&lt;/OverrideAbbr&gt;
+    &lt;Volume&gt;Volume5&lt;/Volume&gt;
+    &lt;NotReqXML&gt;0&lt;/NotReqXML&gt;
+  &lt;/MsgType&gt;
+</pre>
+</td>
+<td>
+<pre>
+  &lt;MsgType&gt;
+    &lt;MsgType&gt;BM&lt;/MsgType&gt;
+    &lt;MessageName&gt;AllocationInstructionAlert&lt;/MessageName&gt;
+    &lt;ComponentType&gt;Message&lt;/ComponentType&gt;
+    &lt;Category&gt;Allocation&lt;/Category&gt;
+    &lt;MsgID&gt;98&lt;/MsgID&gt;
+    &lt;Section&gt;Post Trade&lt;/Section&gt;
+    &lt;AbbrName&gt;AllocInstrAlert&lt;/AbbrName&gt;
+    &lt;OverrideAbbr&gt;AllocInstrAlert&lt;/OverrideAbbr&gt;
+    &lt;Volume&gt;Volume5&lt;/Volume&gt;
+    &lt;NotReqXML&gt;0&lt;/NotReqXML&gt;
+  &lt;/MsgType&gt;
+</pre>
+</td>
+</tr>
+
+<tr>
+<td colspan="2">
+<p>Changed <b>ExecutionAcknowledgement</b> message &lt;Section&gt; from "SingleGeneralOrderHandling" to "Trade"</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<h4>From</h4>
+</td>
+<td>
+<h4>To</h4>
+</td>
+</tr>
+<tr>
+<td>
+<pre>
+  &lt;MsgType&gt;
+    &lt;MsgType&gt;BN&lt;/MsgType&gt;
+    &lt;MessageName&gt;ExecutionAcknowledgement&lt;/MessageName&gt;
+    &lt;ComponentType&gt;Message&lt;/ComponentType&gt;
+    &lt;Category&gt;SingleGeneralOrderHandling&lt;/Category&gt;
+    &lt;MsgID&gt;99&lt;/MsgID&gt;
+    &lt;Section&gt;SingleGeneralOrderHandling&lt;/Section&gt;
+    &lt;AbbrName&gt;ExecAck&lt;/AbbrName&gt;
+    &lt;OverrideAbbr&gt;ExecAck&lt;/OverrideAbbr&gt;
+    &lt;Volume&gt;Volume4&lt;/Volume&gt;
+    &lt;NotReqXML&gt;0&lt;/NotReqXML&gt;
+  &lt;/MsgType&gt;
+</pre>
+</td>
+<td>
+<pre>
+  &lt;MsgType&gt;
+    &lt;MsgType&gt;BN&lt;/MsgType&gt;
+    &lt;MessageName&gt;ExecutionAcknowledgement&lt;/MessageName&gt;
+    &lt;ComponentType&gt;Message&lt;/ComponentType&gt;
+    &lt;Category&gt;SingleGeneralOrderHandling&lt;/Category&gt;
+    &lt;MsgID&gt;99&lt;/MsgID&gt;
+    &lt;Section&gt;Trade&lt;/Section&gt;
+    &lt;AbbrName&gt;ExecAck&lt;/AbbrName&gt;
+    &lt;OverrideAbbr&gt;ExecAck&lt;/OverrideAbbr&gt;
+    &lt;Volume&gt;Volume4&lt;/Volume&gt;
+    &lt;NotReqXML&gt;0&lt;/NotReqXML&gt;
+  &lt;/MsgType&gt;
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td colspan="2">
+<p>Changed <b>TradingSessionList</b> message &lt;Section&gt; from "SecurityAndTradingSessionDefinitionOrStatus" to "Pre Trade"</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<h4>From</h4>
+</td>
+<td>
+<h4>To</h4>
+</td>
+</tr>
+<tr>
+<td>
+<pre>
+  &lt;MsgType&gt;
+    &lt;MsgType&gt;BJ&lt;/MsgType&gt;
+    &lt;MessageName&gt;TradingSessionList&lt;/MessageName&gt;
+    &lt;ComponentType&gt;Message&lt;/ComponentType&gt;
+    &lt;Category&gt;SecurityAndTradingSessionDefinitionOrStatus&lt;/Category&gt;
+    &lt;MsgID&gt;100&lt;/MsgID&gt;
+    &lt;Section&gt;SecurityAndTradingSessionDefinitionOrStatus&lt;/Section&gt;
+    &lt;AbbrName&gt;TradSessList&lt;/AbbrName&gt;
+    &lt;OverrideAbbr&gt;TradSessList&lt;/OverrideAbbr&gt;
+    &lt;Volume&gt;Volume3&lt;/Volume&gt;
+    &lt;NotReqXML&gt;0&lt;/NotReqXML&gt;
+  &lt;/MsgType&gt;
+</pre>
+</td>
+<td>
+<pre>
+  &lt;MsgType&gt;
+    &lt;MsgType&gt;BJ&lt;/MsgType&gt;
+    &lt;MessageName&gt;TradingSessionList&lt;/MessageName&gt;
+    &lt;ComponentType&gt;Message&lt;/ComponentType&gt;
+    &lt;Category&gt;SecurityAndTradingSessionDefinitionOrStatus&lt;/Category&gt;
+    &lt;MsgID&gt;100&lt;/MsgID&gt;
+    &lt;Section&gt;Pre Trade&lt;/Section&gt;
+    &lt;AbbrName&gt;TradSessList&lt;/AbbrName&gt;
+    &lt;OverrideAbbr&gt;TradSessList&lt;/OverrideAbbr&gt;
+    &lt;Volume&gt;Volume3&lt;/Volume&gt;
+    &lt;NotReqXML&gt;0&lt;/NotReqXML&gt;
+  &lt;/MsgType&gt;
+</pre>
+</td>
+</tr>
+
+<tr>
+<td colspan="2">
+<p>Changed <b>TradingSessionListRequest</b> message &lt;Section&gt; from "SecurityAndTradingSessionDefinitionOrStatus" to "Pre Trade"</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<h4>From</h4>
+</td>
+<td>
+<h4>To</h4>
+</td>
+</tr>
+<tr>
+<td>
+<pre>
+  &lt;MsgType&gt;
+    &lt;MsgType&gt;BI&lt;/MsgType&gt;
+    &lt;MessageName&gt;TradingSessionListRequest&lt;/MessageName&gt;
+    &lt;ComponentType&gt;Message&lt;/ComponentType&gt;
+    &lt;Category&gt;SecurityAndTradingSessionDefinitionOrStatus&lt;/Category&gt;
+    &lt;MsgID&gt;101&lt;/MsgID&gt;
+    &lt;Section&gt;SecurityAndTradingSessionDefinitionOrStatus&lt;/Section&gt;
+    &lt;AbbrName&gt;TradSessListReq&lt;/AbbrName&gt;
+    &lt;OverrideAbbr&gt;TradSessListReq&lt;/OverrideAbbr&gt;
+    &lt;Volume&gt;Volume3&lt;/Volume&gt;
+    &lt;NotReqXML&gt;0&lt;/NotReqXML&gt;
+  &lt;/MsgType&gt;
+</pre>
+</td>
+<td>
+<pre>
+  &lt;MsgType&gt;
+    &lt;MsgType&gt;BI&lt;/MsgType&gt;
+    &lt;MessageName&gt;TradingSessionListRequest&lt;/MessageName&gt;
+    &lt;ComponentType&gt;Message&lt;/ComponentType&gt;
+    &lt;Category&gt;SecurityAndTradingSessionDefinitionOrStatus&lt;/Category&gt;
+    &lt;MsgID&gt;101&lt;/MsgID&gt;
+    &lt;Section&gt;Pre Trade&lt;/Section&gt;
+    &lt;AbbrName&gt;TradSessListReq&lt;/AbbrName&gt;
+    &lt;OverrideAbbr&gt;TradSessListReq&lt;/OverrideAbbr&gt;
+    &lt;Volume&gt;Volume3&lt;/Volume&gt;
+    &lt;NotReqXML&gt;0&lt;/NotReqXML&gt;
+  &lt;/MsgType&gt;
+</pre>
+</td>
+</tr>
+
+</table>

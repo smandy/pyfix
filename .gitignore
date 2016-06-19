@@ -1,1 +1,4 @@
 *~
+*.pyc
+/pyfix/examples/simpleordersend/#sender.py#
+pyfix/examples/persist/**

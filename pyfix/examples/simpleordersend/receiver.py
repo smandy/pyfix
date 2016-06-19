@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import yaml
 
 from pyfix.FIXProtocol import NormalMessageProcessing
