@@ -1,4 +1,4 @@
-from pyfix.messages.Execution import Execution
+rfrom pyfix.messages.Execution import Execution
 from pyfix.messages.Order     import Order
 from pyfix.core.PortfolioManager import PortfolioManager
 
