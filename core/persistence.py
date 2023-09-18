@@ -169,8 +169,8 @@ class CsvPersister:
             print(f"{name} -> {getattr(target,name)}")
         return target
 
-persist2 = \
-{
+
+persist2 = {
     Order: [
         (stringAttr, 'clOrdID', 1),
         (securityAttr, 'security', 1),
@@ -204,40 +204,40 @@ class TestSpooler:
 
     def write(self, x):
         self.f.write(x)
-        
+
     def flush(self):
         self.f.flush()
 
     def getField(self):
-        if not self.currentRecord or self.recordIndex>=len(self.currentRecord):
+        if not self.currentRecord or self.recordIndex >= len(self.currentRecord):
             self.currentRecord = self.getRecord()
             if not self.currentRecord:
                 return None
-            
+
         ret = self.currentRecord[self.recordIndex]
         self.recordIndex += 1
         return ret
-        
+
     def getRecord(self):
         self.recordIndex = 0
         ret = self.f.readline().strip()
         if not ret:
             return None
-        else:
-            return ret.split(',')
+        return ret.split(',')
+
 
 objectStream = """
 Order,1,order1,MSFT,100,BUY,ANDY
 Order,1,order2,MSFT,200,SELL,ANDY
 Execution,1,exec1,PARTIAL_FILL,order1,BUY,100,MSFT,33.5
 """[1:]
-                        
+
 if __name__ == '__main__':
     if 1:
-        p = CsvPersister( TestSpooler(StringIO(objectStream)), persist2)
+        p = CsvPersister(TestSpooler(StringIO(objectStream)), persist2)
         outString = StringIO()
-        p2 = CsvPersister( TestSpooler( outString), persist2 )
-        
+        p2 = CsvPersister(TestSpooler(outString), persist2)
+
         while 1:
             print("Reading")
             x = p.readObject()
@@ -253,7 +253,7 @@ if __name__ == '__main__':
         print(s)
 
         refeed = StringIO(s)
-        p3 = CsvPersister( TestSpooler(refeed), persist2)
+        p3 = CsvPersister(TestSpooler(refeed), persist2)
         print("ReReading")
         while 1:
             obj = p3.readObject()
@@ -262,12 +262,9 @@ if __name__ == '__main__':
             print(obj)
 
     if 0:
-        ts = TestSpooler( StringIO(objectStream))
+        ts = TestSpooler(StringIO(objectStream))
         while 0:
             r = ts.getField()
-            if not r: break
+            if not r:
+                break
             print(r)
-        
-
-
-                        
