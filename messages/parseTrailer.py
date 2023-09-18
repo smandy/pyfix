@@ -6,13 +6,13 @@ within SecureData field
 from pprint import pprint as pp
 import string
 
-lines = lines.split("\n")
-lines = [ x for x in lines if x and  x[0] in string.digits ]
+lines2 = lines.split("\n")
+lines3 = [x for x in lines2 if x and x[0] in string.digits]
 trailerData = []
 for line in lines:
-    #print line
+    # print line
     x = line.split()[:3]
-    trailerData.append( x )
+    trailerData.append(x)
 
-if __name__=='__main__':
+if __name__ == '__main__':
     pp(trailerData)
