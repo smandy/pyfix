@@ -21,8 +21,9 @@ class FIXParser:
             self.callback = cb
 
         self.on_discard = on_discard
-        iter_fields = self.fix.standard_header.mandatory_fields + self.fix.standard_trailer.mandatory_fields
-        self.min_size = sum([len(x.Tag) + 2 for x in iter_fields])
+        iter_fields = self.fix.standard_header.mandatory_fields + \
+            self.fix.standard_trailer.mandatory_fields
+        self.min_size = sum(len(x.Tag) + 2 for x in iter_fields)
         self.send_data = send_data
         self.reset()
         self.triplets = []
@@ -38,7 +39,7 @@ class FIXParser:
         self.bytes_in_buffer = 0
 
     def checksum(self):
-        return sum([len(x[1]) + 1 for x in self.triplets]) + len(self.buf)
+        return sum(len(x[1]) + 1 for x in self.triplets) + len(self.buf)
 
     def _feed(self, data):
         self._feed(data)
@@ -46,8 +47,9 @@ class FIXParser:
             "triplets": self.triplets,
             "checksum": self.checksum(),
             "bytes": self.bytes_in_buffer})
-        assert self.bytes_in_buffer == self.checksum(), "consistency check have %s bytes but calculate %s" % (
-            self.bytes_in_buffer, self.checksum() )
+        assert self.bytes_in_buffer == self.checksum(), \
+            "consistency check have %s bytes but calculate " \
+            f"{self.bytes_in_buffer} {self.checksum()}"
 
     def feed(self, data):
         fix = self.fix
@@ -57,9 +59,9 @@ class FIXParser:
         if not self.bytes_in_buffer > self.min_size:
             return
 
-        if not "10=" in self.buf:
+        if "10=" not in self.buf:
             return
-            #self.bytesInBuffer
+            # self.bytesInBuffer
 
         # Not even worth trying up till this point
         # partition string gives a list of 3-tuples.
@@ -74,28 +76,31 @@ class FIXParser:
         else:
             # Push trailing field back onto the buffer
             remainder = bits.pop()[1]
-            #print "Pushing %s back onto buffer - start of a new field that's not been terminated yet" % remainder
+            # print "Pushing %s back onto buffer -
+            # start of a new field that's not been terminated yet" % remainder
             self.buf = remainder
         self.triplets += bits
 
-        while self.triplets and not self.triplets[0][1].startswith(FIX_PREAMBLE):
+        while self.triplets and not \
+                self.triplets[0][1].startswith(FIX_PREAMBLE):
             self.bytes_in_buffer -= len(self.triplets[0][1])
             if self.on_discard:
                 crud = self.triplets[0][1] + SOH
                 self.on_discard(crud)
 
-            #print "Removing %s" % str(self.triplets[0])
+            # print "Removing %s" % str(self.triplets[0])
             self.triplets.remove(self.triplets[0])
 
-        # These turned out to be hotspots so we'll look them up outside the main loop
         msg_type_tag = fix.MsgType.Tag
         check_sum_tag = fix.CheckSum.Tag
-        #sequenceNumberTag = pyfix.MsgSeqNum.Tag
+        # sequenceNumberTag = pyfix.MsgSeqNum.Tag
 
-        # Okay by now we've consumed all fieldpairs, put whatever isn't a pair back on the buffer,
+        # Okay by now we've consumed all fieldpairs,
+        # put whatever isn't a pair back on the buffer,
         # and consumed everything up to the sync FIX= tag
-        #fieldCollector = (headerFields, messageFields, footerFields) = ( [], [], [] )
-        msg_class, start_idx, field_collector, l = None, 0, ( [], [], [] ), 0
+        # fieldCollector = (headerFields, messageFields,
+        # footerFields) = ( [], [], [] )
+        msg_class, start_idx, field_collector, l = None, 0, ([], [], []), 0
         exception = None
 
         for i, ((key, sep, val), original_field) in enumerate(self.triplets):
@@ -103,30 +108,33 @@ class FIXParser:
             # since it's game over we've only delayed the inevitable by a small
             # amount of time :-)
             if not sep:
-                raise ParseException("Malformed field %s" % original_field)
+                raise ParseException(f"Malformed field {original_field}")
             l += len(original_field) + 1
 
-            # This looks like a noop but has the side effect of adding the created field to the appropriate
+            # This looks like a noop but has the side effect
+            # of adding the created field to the appropriate
             # collector bucket
-            fix.field_by_id[key](val, is_native=False, collector=field_collector)
+            fix.field_by_id[key](val, is_native=False,
+                                 collector=field_collector)
 
             if key == msg_type_tag:
-            #if isinstance( field, self.pyfix.MsgType):  -> Hotspot
+            # if isinstance( field, self.pyfix.MsgType):  -> Hotspot
                 msg_class = fix.message_by_id.get(val, fix.UnknownMessage)
                 if msg_class == fix.UnknownMessage:
-                    exception = BusinessReject("Unknown Message Type %s" % val,
-                                               None,
-                                               fix.SessionRejectReason.INVALIDMSGTYPE)
+                    exception = BusinessReject(
+                        f"Unknown Message Type {val} {None} "
+                        f"{fix.SessionRejectReason.INVALIDMSGTYPE}")
             elif key == check_sum_tag:
-            #elif isinstance( field, self.pyfix.CheckSum): -> HotSpot
+                # elif isinstance( field, self.pyfix.CheckSum): -> HotSpot
                 if not msg_class:
                     # At this point all bets are off
                     self.reset()
                     raise ParseException(
-                        "Have checksum but no MsgType") # Spec says we don't need to respond - malformed message
-                    # At this point we know we've got something of reasonable size
+                        "Have checksum but no MsgType")
+                # Spec says we don't need to respond - malformed message
+                # At this point we know we've got something of reasonable size
                 # isnative = False will force parse
-                #print fieldCollector
+                # print fieldCollector
 
                 msg = msg_class(header_fields=field_collector[0],
                                 fields=field_collector[1],
@@ -135,10 +143,11 @@ class FIXParser:
                 msg.exception = exception
 
                 self.bytes_in_buffer -= l
-                msg_class, field_collector, l = None, ( [], [], []), 0
+                msg_class, field_collector, l = None, ([], [], []), 0
 
                 if self.send_data:
-                    as_fix = "".join(x[1] + SOH for x in self.triplets[start_idx:i + 1])
+                    as_fix = "".join(x[1] + SOH
+                                     for x in self.triplets[start_idx:i + 1])
                     if as_fix != msg.to_fix():
                         print(as_fix)
                         print(msg.to_fix())
