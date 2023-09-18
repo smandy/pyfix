@@ -1,6 +1,6 @@
 import random
-from   datetime import datetime
-from   pyfix.messages.Order import  Order
+from datetime import datetime
+from pyfix.messages.Order import Order
 from pyfix.messages.enum import Side
 
 from pyfix.core.AccountManager  import AccountManager
@@ -11,17 +11,17 @@ class OrderGenerator:
         self.idBase = 0
         self.dt = datetime.now().strftime("%Y%m%d")
         self.prefix = prefix
-        self.sideChoices   = [ Side.BUY, Side.SELL ]
-        self.accountManager  = AccountManager()
+        self.sideChoices = [Side.BUY, Side.SELL]
+        self.accountManager = AccountManager()
         self.securityManager = SecurityManager()
 
     def orderWasDone(self, clOrdID):
         # persistence tells us about orders already done
-        oldIdBase = int( clOrdID.split('_')[1])
+        oldIdBase = int(clOrdID.split('_')[1])
         self.idBase = oldIdBase+1
 
     def onInit(self):
-        print "OrderGenerator.onInit()"
+        print("OrderGenerator.onInit()")
         self.accountChoices  = self.accountManager.items
         self.brokerChoices   = self.brokerManager.items
         self.securityChoices = self.securityManager.items
@@ -56,7 +56,7 @@ if __name__=='__main__':
     for i in range(100):
         #print og.makeClOrdID()
         o = og.makeOrder()
-        print og.toFix( o)
+        print(og.toFix(o))
 
 
 
