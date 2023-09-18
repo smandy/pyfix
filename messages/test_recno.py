@@ -41,7 +41,7 @@ class SimpleRecnoTestCase(unittest.TestCase):
             self.assertEqual(type(recno), type(0))
             self.assert_(recno >= 1)
             if verbose:
-                print recno,
+                print(recno)
 
         if verbose: print
 
@@ -52,27 +52,28 @@ class SimpleRecnoTestCase(unittest.TestCase):
         for recno in range(1, len(d)+1):
             data = d[recno]
             if verbose:
-                print data
+                print(data)
 
             self.assertEqual(type(data), type(""))
             self.assertEqual(data, d.get(recno))
 
         try:
             data = d[0]  # This should raise a KeyError!?!?!
-        except db.DBInvalidArgError, val:
+        except (db.DBInvalidArgError, val):
             import sys
             if sys.version_info[0] < 3 :
                 self.assertEqual(val[0], db.EINVAL)
             else :
                 self.assertEqual(val.args[0], db.EINVAL)
-            if verbose: print val
+            if verbose:
+                print(val)
         else:
             self.fail("expected exception")
 
         # test that has_key raises DB exceptions (fixed in pybsddb 4.3.2)
         try:
             d.has_key(0)
-        except db.DBError, val:
+        except (db.DBError, val):
             pass
         else:
             self.fail("has_key did not raise a proper exception")
@@ -274,7 +275,8 @@ class SimpleRecnoTestCase(unittest.TestCase):
                 self.assertEqual(val[0], db.EINVAL)
             else :
                 self.assertEqual(val.args[0], db.EINVAL)
-            if verbose: print val
+            if verbose:
+                print(val)
         else:
             self.fail("expected exception")
 
@@ -282,7 +284,7 @@ class SimpleRecnoTestCase(unittest.TestCase):
         rec = c.first()
         while rec:
             if verbose:
-                print rec
+                print(rec)
             rec = c.next()
 
         c.close()
