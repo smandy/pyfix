@@ -30,7 +30,7 @@ class FIXParser:
 
     @staticmethod
     def print_msg(msg, data=''):
-        print "%s %s" % (msg, data )
+        print(f"{msg} {data}")
 
     def reset(self):
         self.buf = ''
@@ -140,8 +140,8 @@ class FIXParser:
                 if self.send_data:
                     as_fix = "".join(x[1] + SOH for x in self.triplets[start_idx:i + 1])
                     if as_fix != msg.to_fix():
-                        print as_fix
-                        print msg.to_fix()
+                        print(as_fix)
+                        print(msg.to_fix())
                 else:
                     as_fix = None
                 start_idx = i + 1
