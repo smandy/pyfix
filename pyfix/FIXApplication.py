@@ -1,10 +1,12 @@
 from pyfix.FIXParser import SynchronousParser, ParseException
 import cPickle
 
+
 class RecoveryException(Exception):
     pass
 
-class FIXApplication(object):
+
+class FIXApplication:
     def __init__(self, fix):
         self.state = None
         self.protocol = None
@@ -24,27 +26,28 @@ class FIXApplication(object):
         self.session = session
 
     def set_protocol(self, protocol):
-        print "onProtocol %s" % protocol
-        assert protocol.session == self.session, "%s vs %s" % (protocol.session, self.session)
+        print(f"onProtocol {protocol}")
+        assert protocol.session == self.session, \
+            f"{protocol.session} {self.session}"
         self.protocol = protocol
 
-    def set_state(self, old_state, new_state):
+    def set_state(self, _, new_state):
         self.state = new_state
 
     def on_message(self, protocol, msg, seq, poss_dup):
-        assert protocol == self.protocol, "%s vs %s" % ( protocol, self.protocol)
+        assert protocol == self.protocol, f"{protocol} {self.protocol}"
         msg_class = msg.__class__
         if self.dispatch_dict.has_key(msg_class):
             self.dispatch_dict[msg_class](protocol, msg, seq, poss_dup)
         else:
-            print "Warning unmapped message %s" % msg_class
+            print("Warning unmapped message {msg_class}")
 
     def recovered_message(self, msg):
         klazz = msg.__class__
         if self.recovery_dict.has_key(klazz):
             self.recovery_dict[klazz](msg)
         else:
-            print "Unmapped recovery message %s" % klazz
+            print("Unmapped recovery message {klazz}")
 
     def on_recovery_done(self):
         pass
