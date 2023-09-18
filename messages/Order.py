@@ -9,14 +9,14 @@ class Order(pb.Copyable, pb.RemoteCopy):
     version = 1
 
     def __init__(self,
-                 clOrdID = None,
-                 security = None,
-                 orderQty = None,
-                 side = None,
-                 account = None,
-                 broker = None,
-                 px = 0.0,
-                 sender = None):
+                 clOrdID=None,
+                 security=None,
+                 orderQty=None,
+                 side=None,
+                 account=None,
+                 broker=None,
+                 px=0.0,
+                 sender=None):
         self.clOrdID = clOrdID
         self.security = security
         self.orderQty = orderQty
@@ -56,17 +56,17 @@ if __name__ == '__main__':
     os2.apply(e4)
     os2.apply(e5)
 
-    #om = OrderManager()
-    #a = Execution(
-    #o = Order('wayhey', dwdw, qty, side, account, px)
-    #o.__init__('waye, security, qty, side, account, px)
-    #a = Execution()
-    #a.
-    #for o in [ o1, o2]:
-    #    om.onOrder(o)
-    #for e in [ e1, e2, e3, e4, e5]:
-    #    om.onExecution(e)
+    # om = OrderManager()
+    # a = Execution(
+    # o = Order('wayhey', dwdw, qty, side, account, px)
+    # o.__init__('waye, security, qty, side, account, px)
+    # a = Execution()
+    # a.
+    # for o in [ o1, o2]:
+    #     om.onOrder(o)
+    # for e in [ e1, e2, e3, e4, e5]:
+    #     om.onExecution(e)
     #
-    #om.dump()
+    # om.dump()
 
 pb.setUnjellyableForClass(Order, Order)
