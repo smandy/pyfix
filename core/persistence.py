@@ -5,6 +5,7 @@ from pyfix.messages.enum      import ExecType
 
 from pyfix.core.AccountManager  import AccountManager,  Account
 from pyfix.core.SecurityManager import SecurityManager, Security
+from StringIO import StringIO
 
 
 class StringAttr:
@@ -27,6 +28,7 @@ class FloatAttr:
         assert isinstance(f, float)
         persister.writeFloat(f)
 
+
 class IntAttr:
     def set(self, target, name, persister):
         i = persister.readInt()
@@ -37,18 +39,21 @@ class IntAttr:
         assert isinstance(i, int)
         persister.writeInt(i)
 
+
 class SecurityAttr:
     # The field in the class we will actually persist
     field = 'ticker'
+
     def set(self, target, name, persister):
         s = persister.readString()
-        security = persister.securityManager.getByFields( [ self.field], s )
+        security = persister.securityManager.getByFields([self.field], s)
         assert security is not None, "Couldn't resolve security"
         target.__dict__[name] = security
 
-    def write(self, target,name, persister):
+    def write(self, target, name, persister):
         sec = target.__dict__[name]
-        assert sec.__class__ == Security, f"Couldn't resolve security from {sec} {type(sec)}"
+        assert sec.__class__ == Security, \
+            f"Couldn't resolve security from {sec} {type(sec)}"
         persister.writeInt(sec.__dict__[self.field])
 
 
@@ -57,8 +62,8 @@ class AccountAttr:
     field = 'name'
 
     def set(self, target, name, persister):
-        s2 = persister.readString()
-        account = persister.accountManager.getByFields([self.field], s2)
+        s = persister.readString()
+        account = persister.accountManager.getByFields([self.field], s)
         assert account is not None, "Couldn't resolve account"
         target.__dict__[name] = account
 
@@ -142,7 +147,6 @@ class CsvPersister:
 
     def writeObject(self, obj):
         klazz = obj.__class__
-        #print "Klazz is %s" % klazz
         objName = klazz.__name__
         self.writeString(objName)
         self.writeInt(klazz.version)
@@ -192,7 +196,6 @@ persist2 = {
 # persist2[ExecutionWrapper] = persist2[Execution]
 # persist2[OrderWrapper]     = persist2[Order]
 
-from StringIO import StringIO
 
 END_OF_RECORD = "END_OF_RECORD"
 
@@ -209,7 +212,8 @@ class TestSpooler:
         self.f.flush()
 
     def getField(self):
-        if not self.currentRecord or self.recordIndex >= len(self.currentRecord):
+        if not self.currentRecord or \
+           self.recordIndex >= len(self.currentRecord):
             self.currentRecord = self.getRecord()
             if not self.currentRecord:
                 return None
@@ -233,38 +237,36 @@ Execution,1,exec1,PARTIAL_FILL,order1,BUY,100,MSFT,33.5
 """[1:]
 
 if __name__ == '__main__':
-    if 1:
-        p = CsvPersister(TestSpooler(StringIO(objectStream)), persist2)
-        outString = StringIO()
-        p2 = CsvPersister(TestSpooler(outString), persist2)
+    p = CsvPersister(TestSpooler(StringIO(objectStream)), persist2)
+    outString = StringIO()
+    p2 = CsvPersister(TestSpooler(outString), persist2)
 
-        while 1:
-            print("Reading")
-            x = p.readObject()
-            print(x)
-            if not x:
-                break
-            print("Writing")
-            p2.writeObject(x)
-            obj = x
+    while 1:
+        print("Reading")
+        tmp = p.readObject()
+        print(tmp)
+        if not tmp:
+            break
+        print("Writing")
+        p2.writeObject(tmp)
+        o = tmp
 
-        outString.seek(0)
-        s = outString.read()
-        print(s)
+    outString.seek(0)
+    s2 = outString.read()
+    print(s2)
 
-        refeed = StringIO(s)
-        p3 = CsvPersister(TestSpooler(refeed), persist2)
-        print("ReReading")
-        while 1:
-            obj = p3.readObject()
-            if not obj:
-                break
-            print(obj)
+    refeed = StringIO(s2)
+    p3 = CsvPersister(TestSpooler(refeed), persist2)
+    print("ReReading")
+    while 1:
+        o = p3.readObject()
+        if not o:
+            break
+        print(o)
 
-    if 0:
-        ts = TestSpooler(StringIO(objectStream))
-        while 0:
-            r = ts.getField()
-            if not r:
-                break
-            print(r)
+    ts = TestSpooler(StringIO(objectStream))
+    while 0:
+        r = ts.getField()
+        if not r:
+            break
+        print(r)
