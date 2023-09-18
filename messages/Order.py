@@ -4,49 +4,52 @@ from pyfix.messages.Execution     import Execution
 from pyfix.util.OrderState        import OrderState
 from twisted.spread                import pb
 
+
 class Order(pb.Copyable, pb.RemoteCopy):
     version = 1
+
     def __init__(self,
-                 clOrdID  = None,
+                 clOrdID = None,
                  security = None,
                  orderQty = None,
-                 side     = None,
-                 account  = None,
-                 broker   = None,
+                 side = None,
+                 account = None,
+                 broker = None,
                  px = 0.0,
-                 sender   = None ):
-        self.clOrdID   = clOrdID
-        self.security  = security
-        self.orderQty  = orderQty
-        self.side      = side
-        self.account   = account
-        self.broker    = broker
-        self.px        = px
-        self.sender    = sender
-        #self.volume    = 0.0
+                 sender = None):
+        self.clOrdID = clOrdID
+        self.security = security
+        self.orderQty = orderQty
+        self.side = side
+        self.account = account
+        self.broker = broker
+        self.px = px
+        self.sender = sender
 
     def getCopyableState(self):
         d = self.__dict__
         d['security'] = d['security'].ric
-        d['account']  = d['account'].name
-        d['broker']   = d['broker'].name
+        d['account'] = d['account'].name
+        d['broker'] = d['broker'].name
 
-    def __repr__(self):
-        return "Order: %s %s %s %s %s %s" % ( self.clOrdID, self.side.name, self.orderQty, self.security, self.px, self.account)
+    def __repr__(self) -> str:
+        return f"Order: {self.clOrdID} {self.side.name} {self.orderQty} " \
+               f"{self.security} {self.px} {self.account}"
 
-if __name__=='__main__':
-    o1 = Order( 'order1', 'MSFT', 100, Side.BUY)
-    o2 = Order( 'order2', 'MSFT', 200, Side.SELL)
+if __name__ == '__main__':
+    o1 = Order('order1', 'MSFT', 100, Side.BUY)
+    o2 = Order('order2', 'MSFT', 200, Side.SELL)
     os1 = OrderState(o1)
     os2 = OrderState(o2)
-    
-    e1 = Execution( ExecType.PARTIAL_FILL, 'exec1', 'order1', Side.BUY,  50, 'MSFT', 40.25)
-    e2 = Execution( ExecType.FILL,         'exec2', 'order1', Side.BUY,  50, 'MSFT', 41.0)
-    e3 = Execution( ExecType.FILL,         'exec3', 'order2', Side.SELL, 100, 'MSFT', 41.0)
-    e4 = Execution( ExecType.FILL,         'exec4', 'order2', Side.SELL, 50, 'MSFT',  40.5)
-    e5 = Execution( ExecType.FILL,         'exec5', 'order2', Side.SELL, 50, 'MSFT',  41.5)
 
-    #e6 = Execution()
+    e = Execution
+    e1 = e(ExecType.PARTIAL_FILL, 'exec1', 'order1',
+           Side.BUY, 50, 'MSFT', 40.25)
+    e2 = e(ExecType.FILL, 'exec2', 'order1', Side.BUY, 50, 'MSFT', 41.0)
+    e3 = e(ExecType.FILL, 'exec3', 'order2', Side.SELL, 100, 'MSFT', 41.0)
+    e4 = e(ExecType.FILL, 'exec4', 'order2', Side.SELL, 50, 'MSFT', 40.5)
+    e5 = e(ExecType.FILL, 'exec5', 'order2', Side.SELL, 50, 'MSFT', 41.5)
+
     os1.apply(e1)
     os1.apply(e2)
     os2.apply(e3)
@@ -66,4 +69,4 @@ if __name__=='__main__':
     #
     #om.dump()
 
-pb.setUnjellyableForClass( Order, Order)
+pb.setUnjellyableForClass(Order, Order)
