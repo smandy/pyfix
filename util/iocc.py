@@ -49,7 +49,7 @@ class IOCC(object):
                         #targetO = v2
                         targetObject = v2
                         obj    = v
-                        print "Name injection  %s ( %s, %s )" % (targetMethod, targetObject, obj)
+                        print("Name injection  %s ( %s, %s )" % (targetMethod, targetObject, obj))
                         targetMethod( targetObject, obj )
                         methodsCalled.append( (targetObject, targetMethod) )
 

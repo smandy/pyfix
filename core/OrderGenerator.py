@@ -22,8 +22,8 @@ class OrderGenerator:
 
     def onInit(self):
         print("OrderGenerator.onInit()")
-        self.accountChoices  = self.accountManager.items
-        self.brokerChoices   = self.brokerManager.items
+        self.accountChoices = self.accountManager.items
+        self.brokerChoices = self.brokerManager.items
         self.securityChoices = self.securityManager.items
 
     def setAccountManager(self, am):
@@ -39,24 +39,18 @@ class OrderGenerator:
         self.clOrdIDGen = clOrdIDGen
 
     def makeOrder(self):
-        #security = random.choice( self.securityChoices)
-        side     = random.choice( self.sideChoices)
-        qty      = 100
-        px       = 100
-        security = random.choice( self.securityChoices)
+        side = random.choice(self.sideChoices)
+        qty = 100
+        px = 100
+        security = random.choice(self.securityChoices)
         clOrdID = self.clOrdIDGen.makeClOrdID()
-        account = random.choice( self.accountChoices)
+        account = random.choice(self.accountChoices)
         broker = random.choice(self.brokerChoices)
-        o = Order( clOrdID, security, qty, side, account, broker, px)
-        return o
+        ret = Order(clOrdID, security, qty, side, account, broker, px)
+        return ret
 
 if __name__=='__main__':
-    #print makeOrder()
     og = OrderGenerator()
     for i in range(100):
-        #print og.makeClOrdID()
         o = og.makeOrder()
         print(og.toFix(o))
-
-
-

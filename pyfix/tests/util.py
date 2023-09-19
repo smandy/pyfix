@@ -3,94 +3,84 @@
 # definition on the session class
 
 from testFIXSession import fix
-from datetime       import datetime
+from datetime import datetime
 
 def compileMessageNoPersist(self,
-                   msg,
-                   possDup = False,
-                   forceSequenceNumber = None,
-                   origSendingTime = None,
-                   persist = True,
-                   disableValidation = False):
-    sendingTime = fix.SendingTime( datetime.now() )
-    bodyLength  = fix.BodyLength(0)
-    checkSum    = fix.CheckSum(0)
+                            msg,
+                            possDup=False,
+                            forceSequenceNumber=None,
+                            _origSendingTime=None,
+                            _persist=True,
+                            _disableValidation=False):
+    sendingTime = fix.SendingTime(datetime.now())
+    bodyLength = fix.BodyLength(0)
+    checkSum = fix.CheckSum(0)
 
     if forceSequenceNumber:
         seq = forceSequenceNumber
     else:
         seq = self.outMsgSeqNum
-        
-    print "%s compilemessage %s" % (self.sender, seq)
-    header = [ self.beginString,
-               bodyLength,
-               msg.msgTypeField,
-               self.senderCompID,
-               self.targetCompID,
-               self.fix.MsgSeqNum(seq),
-               sendingTime
-               ]
 
-    footer = [ checkSum ]
+    print(f"{self.sender} compilemessage {seq}")
+    header = [self.beginString,
+              bodyLength,
+              msg.msgTypeField,
+              self.senderCompID,
+              self.targetCompID,
+              self.fix.MsgSeqNum(seq),
+              sendingTime
+              ]
+
+    footer = [checkSum]
     msg.headerFields = header
     msg.footerFields = footer
 
-    bl = msg.calc_body_length( mutate = True)
-    cs = msg.calc_check_sum( mutate = True )
-    
-    #if not disableValidation:
-    #    msg.validate()
+    msg.calc_body_length(mutate=True)
+    msg.calc_check_sum(mutate=True)
 
     ret = msg.to_fix()
 
     # Persisting a message with a bad sequence number is bad news.
     # so many things go wrong with it!
-    
+
     if not possDup:
-        #self.persister.persistOutMsg( self.outMsgSeqNum, ret )
-        #self.outDb[self.outMsgSeqNum] = ret
-        #self.outDb.sync()
+        # self.persister.persistOutMsg( self.outMsgSeqNum, ret )
+        # self.outDb[self.outMsgSeqNum] = ret
+        # self.outDb.sync()
         self.outMsgSeqNum += 1
     return ret
 
 
 def compileMessageOmitSequenceNumber(self,
-                   msg,
-                   possDup = False,
-                   forceSequenceNumber = None,
-                   origSendingTime = None,
-                   persist = True,
-                   disableValidation = False):
-    sendingTime = fix.SendingTime( datetime.now() )
-    bodyLength  = fix.BodyLength(0)
-    checkSum    = fix.CheckSum(0)
+                                     msg,
+                                     possDup=False,
+                                     _forceSequenceNumber=None,
+                                     _origSendingTime=None,
+                                     _persistTrue=None,
+                                     _disableValidation=False):
+    sendingTime = fix.SendingTime(datetime.now())
+    bodyLength = fix.BodyLength(0)
+    checkSum = fix.CheckSum(0)
 
-    seq = self.outMsgSeqNum
+    header = [self.beginString,
+              bodyLength,
+              msg.msgTypeField,
+              self.senderCompID,
+              self.targetCompID,
+              sendingTime
+              ]
 
-    header = [ self.beginString,
-               bodyLength,
-               msg.msgTypeField,
-               self.senderCompID,
-               self.targetCompID,
-               #self.pyfix.MsgSeqNum(seq),
-               sendingTime
-               ]
-
-    footer = [ checkSum ]
+    footer = [checkSum]
     msg.headerFields = header
     msg.footerFields = footer
 
-    bl = msg.calc_body_length( mutate = True)
-    cs = msg.calc_check_sum( mutate = True )
-    
-    #if not disableValidation:
-    #    msg.validate()
+    msg.calc_body_length(mutate=True)
+    msg.calc_check_sum(mutate=True)
 
     ret = msg.to_fix()
 
     # Persisting a message with a bad sequence number is bad news.
     # so many things go wrong with it!
-    
     if not possDup:
         self.outMsgSeqNum += 1
         #    self.persister.persistOutMsg( self.outMsgSeqNum, ret )
@@ -100,43 +90,37 @@ def compileMessageOmitSequenceNumber(self,
 
 
 def compileMessageOmitMandatoryHeaderField(self,
-                   msg,
-                   possDup = False,
-                   forceSequenceNumber = None,
-                   origSendingTime = None,
-                   persist = True,
-                   disableValidation = False):
-    sendingTime = fix.SendingTime( datetime.now() )
-    bodyLength  = fix.BodyLength(0)
-    checkSum    = fix.CheckSum(0)
+                                           msg,
+                                           possDup=False,
+                                           _forceSequenceNumber=None,
+                                           _origSendingTime=None,
+                                           _persist=True,
+                                           disableValidation=False):
+    # _sendingTime = fix.SendingTime(datetime.now())
+    bodyLength = fix.BodyLength(0)
+    checkSum = fix.CheckSum(0)
 
     seq = self.outMsgSeqNum
 
-    header = [ self.beginString,
-               bodyLength,
-               msg.msgTypeField,
-               self.senderCompID,
-               self.targetCompID,
-               self.fix.MsgSeqNum(seq),
-               #sendingTime
-               ]
+    header = [self.beginString,
+              bodyLength,
+              msg.msgTypeField,
+              self.senderCompID,
+              self.targetCompID,
+              self.fix.MsgSeqNum(seq),
+              ]
 
-    footer = [ checkSum ]
+    footer = [checkSum]
     msg.headerFields = header
     msg.footerFields = footer
 
-    bl = msg.calc_body_length( mutate = True)
-    cs = msg.calc_check_sum( mutate = True )
+    msg.calc_body_length(mutate=True)
+    msg.calc_check_sum(mutate=True)
 
     if not disableValidation:
         msg.validate()
 
     ret = msg.to_fix()
     if not possDup:
-        #self.persister.persistOutMsg( self.outMsgSeqNum, ret )
-        #self.outDb[self.outMsgSeqNum] = ret
-        #self.outDb.sync()
         self.outMsgSeqNum += 1
     return ret
-
-

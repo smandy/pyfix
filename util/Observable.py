@@ -2,31 +2,30 @@ class Observable:
     def __init__(self):
         self.listeners = []
 
-    def add(self, l):
-        self.listeners.append( l )
+    def add(self, listener):
+        self.listeners.append(listener)
 
     def notify(self, o):
-        #print "notify"
+        # print "notify"
         for x in self.listeners:
-            x( self, o)
+            x(self, o)
 
-def bing( sender, obj):
-    print "Bing : %s %s" % (sender, obj)
+def bing(sender, obj):
+    print(f"Bing : {sender} {obj}")
     
 def bong( sender, obj):
-    print "Bong : %s %s" % (sender, obj)
+    print("Bong : %s %s" % (sender, obj))
 
 class Bingable:
     def __init__(self):
         pass
 
     def bing(self, sender, obj):
-        print "%s.bing( %s %s)" % (self, sender, obj)
+        print("%s.bing( %s %s)" % (self, sender, obj))
 
 if __name__=='__main__':
-    o = Observable()
-    o.add( bing )
-    o.add( bong )
-    o.add( Bingable().bing )
-    o.notify( "Wayhey")
-    
+    obs = Observable()
+    obs = obs.add(bing)
+    obs = obs.add(bong)
+    obs = obs.add(Bingable().bing)
+    obs = obs.notify("Wayhey")

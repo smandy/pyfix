@@ -17,7 +17,7 @@ if __name__=='__main__':
 
     while True:
         x = ts.get_field()
-        print x
+        print(x)
         if not x:
             break
     
