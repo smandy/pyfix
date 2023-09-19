@@ -66,9 +66,6 @@ class Session(ClientFactory):
         self.outMsgSeqNum = 1
         self.inMsgSeqNum = 1
 
-        # self.bodyLength = pyfix.BodyLength(0)
-        # self.checkSum   = pyfix.CheckSum( 0 )
-
     def setPersister(self, persister):
         self.persister = persister
 

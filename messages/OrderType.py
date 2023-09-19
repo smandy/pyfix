@@ -2,6 +2,7 @@ from twisted.spread import pb
 
 from typing import Any
 
+
 class OrdType(pb.Copyable, pb.RemoteCopy):
     lookup: dict[str, Any] = {}
 

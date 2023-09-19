@@ -4,3 +4,4 @@
 pyfix/examples/persist/**
 y
 .#*
+/messages/parseHeader.pyignore

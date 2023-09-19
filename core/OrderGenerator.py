@@ -48,9 +48,3 @@ class OrderGenerator:
         broker = random.choice(self.brokerChoices)
         ret = Order(clOrdID, security, qty, side, account, broker, px)
         return ret
-
-if __name__=='__main__':
-    og = OrderGenerator()
-    for i in range(100):
-        o = og.makeOrder()
-        print(og.toFix(o))
